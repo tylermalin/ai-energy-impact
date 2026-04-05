@@ -20,7 +20,9 @@ import {
   Zap,
   GitBranch,
   MessageSquare,
+  FileDown,
 } from "lucide-react";
+import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
 const METHODOLOGY_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310419663031887970/RntCY6FmRCfuLPXHtAP4Lb/methodology-abstract-2MqCBNsT9q98iARxmYtp6y.webp";
 
@@ -212,9 +214,19 @@ export default function MethodologySection() {
           <h2 className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight mb-4">
             Data Sourcing & Model Assumptions
           </h2>
-          <p className="text-white/50 max-w-3xl leading-relaxed">
+          <p className="text-white/50 max-w-3xl leading-relaxed mb-5">
             We believe in radical transparency. Every number on this dashboard has a source, every calculation has an assumption, and every assumption has a known limitation. This section documents our methodology so you can evaluate, challenge, and improve it.
           </p>
+          <a
+            href={AICO2_METHODOLOGY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 px-5 py-3 rounded-lg bg-gradient-to-r from-teal/15 to-teal/5 border border-teal/25 text-teal font-display font-semibold text-sm hover:from-teal/25 hover:to-teal/10 hover:border-teal/40 transition-all group"
+          >
+            <FileDown className="w-4.5 h-4.5 group-hover:translate-y-0.5 transition-transform" />
+            Read the Full Mālama AICo2 Methodology (PDF)
+            <ExternalLink className="w-3.5 h-3.5 opacity-50" />
+          </a>
         </motion.div>
 
         {/* ---- THE MEASUREMENT PROBLEM ---- */}
@@ -239,6 +251,12 @@ export default function MethodologySection() {
                 </p>
                 <p>
                   This dashboard aggregates the best available data from multiple independent sources, but we acknowledge that all estimates carry significant uncertainty. Our goal is not to present definitive numbers, but to make the scale of AI's environmental impact visible and to push for better measurement infrastructure.
+                </p>
+                <p className="mt-3">
+                  Our full estimation framework — including the dual-phase architecture, five-stage pipeline, task-class parameterization, and cryptographic telemetry roadmap — is documented in the{" "}
+                  <a href={AICO2_METHODOLOGY_URL} target="_blank" rel="noopener noreferrer" className="text-teal font-medium underline underline-offset-2 hover:text-teal/80 transition-colors">
+                    Mālama AICo2 Methodology
+                  </a>.
                 </p>
               </div>
             </div>
@@ -443,6 +461,13 @@ export default function MethodologySection() {
                 <p className="text-white/40 text-xs">
                   This is exactly why we advocate for hardware-level sensor integration inside data centers — to replace estimation with measurement. See the Agents & Sensors section below for our vision.
                 </p>
+                <a
+                  href="#contribute"
+                  className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-all shadow-lg shadow-teal/20"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  Submit a Contribution
+                </a>
               </div>
             </div>
           </div>

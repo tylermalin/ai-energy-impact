@@ -4,7 +4,8 @@
  */
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Zap, Flame, Droplets, Activity } from "lucide-react";
+import { Zap, Flame, Droplets, Activity, FileDown } from "lucide-react";
+import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310419663031887970/RntCY6FmRCfuLPXHtAP4Lb/hero-bg-T997qbZ6qBkA2tumzqH7yt.webp";
 
@@ -98,6 +99,15 @@ export default function HeroSection() {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-amber/20 text-amber/80 font-display font-medium text-sm hover:bg-amber/[0.04] hover:border-amber/30 transition-colors"
               >
                 Agents & Sensors
+              </a>
+              <a
+                href={AICO2_METHODOLOGY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-teal/20 text-teal/80 font-display font-medium text-sm hover:bg-teal/[0.04] hover:border-teal/30 transition-colors"
+              >
+                <FileDown className="w-4 h-4" />
+                AICo2 Paper
               </a>
             </div>
           </motion.div>

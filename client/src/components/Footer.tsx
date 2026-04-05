@@ -2,7 +2,8 @@
  * Design: Data Observatory — Scientific Instrument Aesthetic
  * Footer: Minimal observatory-style footer
  */
-import { Zap } from "lucide-react";
+import { Zap, FileDown } from "lucide-react";
+import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
 export default function Footer() {
   return (
@@ -31,6 +32,7 @@ export default function Footer() {
                 { label: "Key Insights", href: "#insights" },
                 { label: "Methodology & Sources", href: "#methodology" },
                 { label: "Agents & Sensors", href: "#agents" },
+                { label: "Contribute Data", href: "#contribute" },
               ].map((item) => (
                 <li key={item.label}>
                   <a href={item.href} className="text-xs text-white/35 hover:text-teal transition-colors">{item.label}</a>
@@ -45,6 +47,15 @@ export default function Footer() {
             <p className="text-xs text-white/35 leading-relaxed">
               This dashboard aggregates data from 20+ research sources to provide a unified view of AI's environmental footprint. All energy values are per-prompt estimates. See our <a href="#methodology" className="text-teal/60 hover:text-teal transition-colors underline underline-offset-2">Methodology</a> section for full transparency on data sourcing and model assumptions.
             </p>
+            <a
+              href={AICO2_METHODOLOGY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-teal/50 hover:text-teal transition-colors"
+            >
+              <FileDown className="w-3 h-3" />
+              Mālama AICo2 Methodology (PDF)
+            </a>
             <div className="mt-4 flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
               <span className="text-[10px] text-teal/60 uppercase tracking-wider font-medium">Live Data</span>

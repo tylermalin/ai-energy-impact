@@ -1,5 +1,8 @@
 export type Category = "text" | "image" | "video" | "audio" | "other";
 
+/** Mālama AICo2 Methodology — the full framework document */
+export const AICO2_METHODOLOGY_URL = "https://www.dropbox.com/scl/fi/uc73r17p40un79ptj6266/M-lama-AICo2-Methodology.pdf?rlkey=kmn42xf9rocbckefxglepdjxr&st=24jvib86&dl=0";
+
 export interface AIModel {
   id: number;
   task: string;

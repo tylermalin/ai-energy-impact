@@ -9,6 +9,7 @@ import DataExplorer from "@/components/DataExplorer";
 import InsightsSection from "@/components/InsightsSection";
 import MethodologySection from "@/components/MethodologySection";
 import AgentsSection from "@/components/AgentsSection";
+import ContributeSection from "@/components/ContributeSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <InsightsSection />
         <MethodologySection />
         <AgentsSection />
+        <ContributeSection />
       </main>
       <Footer />
     </div>

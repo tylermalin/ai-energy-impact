@@ -23,7 +23,10 @@ import {
   Droplets,
   Flame,
   Wind,
+  FileDown,
+  ExternalLink,
 } from "lucide-react";
+import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
 const SENSOR_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310419663031887970/RntCY6FmRCfuLPXHtAP4Lb/sensor-datacenter-TZds8SaGEfSaUzEUwyS42f.webp";
 
@@ -457,6 +460,16 @@ export default function AgentsSection() {
                 <p>
                   Extending this infrastructure into data centers means every energy reading, every water flow measurement, and every carbon calculation is recorded immutably on-chain. Operators, regulators, and the public can independently verify environmental impact claims, creating the accountability that the FAS, CMU, and industry researchers have called for.
                 </p>
+                <a
+                  href={AICO2_METHODOLOGY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 mt-4 px-5 py-3 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-all shadow-lg shadow-teal/20 group"
+                >
+                  <FileDown className="w-4.5 h-4.5 group-hover:translate-y-0.5 transition-transform" />
+                  Read the Full Mālama AICo2 Methodology
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                </a>
               </div>
             </div>
 

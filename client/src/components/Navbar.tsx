@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { label: "Insights", href: "/#insights" },
   { label: "Methodology", href: "/#methodology" },
   { label: "Agents & Sensors", href: "/#agents" },
+  { label: "Contribute", href: "/#contribute" },
 ];
 
 export default function Navbar() {
