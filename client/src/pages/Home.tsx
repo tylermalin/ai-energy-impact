@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import StatsOverview from "@/components/StatsOverview";
 import DataExplorer from "@/components/DataExplorer";
+import ComparisonTool from "@/components/ComparisonTool";
 import InsightsSection from "@/components/InsightsSection";
 import MethodologySection from "@/components/MethodologySection";
 import AgentsSection from "@/components/AgentsSection";
@@ -20,6 +21,7 @@ export default function Home() {
         <HeroSection />
         <StatsOverview />
         <DataExplorer />
+        <ComparisonTool />
         <InsightsSection />
         <MethodologySection />
         <AgentsSection />

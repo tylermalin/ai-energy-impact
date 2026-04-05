@@ -29,6 +29,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { label: "Data Explorer", href: "#explorer" },
+                { label: "Compare Models", href: "#compare" },
                 { label: "Key Insights", href: "#insights" },
                 { label: "Methodology & Sources", href: "#methodology" },
                 { label: "Agents & Sensors", href: "#agents" },

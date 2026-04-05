@@ -9,6 +9,7 @@ import { Link, useLocation } from "wouter";
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/" },
   { label: "Data Explorer", href: "/#explorer" },
+  { label: "Compare", href: "/#compare" },
   { label: "Insights", href: "/#insights" },
   { label: "Methodology", href: "/#methodology" },
   { label: "Agents & Sensors", href: "/#agents" },
