@@ -10,7 +10,8 @@ const NAV_ITEMS = [
   { label: "Dashboard", href: "/" },
   { label: "Data Explorer", href: "/#explorer" },
   { label: "Insights", href: "/#insights" },
-  { label: "Agents", href: "/#agents" },
+  { label: "Methodology", href: "/#methodology" },
+  { label: "Agents & Sensors", href: "/#agents" },
 ];
 
 export default function Navbar() {

@@ -79,7 +79,7 @@ export default function HeroSection() {
               A comprehensive analysis of energy consumption, carbon emissions, and water usage across 30 AI models — from lightweight text classifiers to frontier reasoning systems.
             </p>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <a
                 href="#explorer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-colors shadow-lg shadow-teal/20"
@@ -88,10 +88,16 @@ export default function HeroSection() {
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </a>
               <a
-                href="#insights"
+                href="#methodology"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 text-white/80 font-display font-medium text-sm hover:bg-white/[0.04] hover:border-white/20 transition-colors"
               >
-                Key Insights
+                Methodology
+              </a>
+              <a
+                href="#agents"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-amber/20 text-amber/80 font-display font-medium text-sm hover:bg-amber/[0.04] hover:border-amber/30 transition-colors"
+              >
+                Agents & Sensors
               </a>
             </div>
           </motion.div>

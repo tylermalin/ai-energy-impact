@@ -6,7 +6,7 @@ import { Zap } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer id="agents" className="border-t border-white/[0.06] py-12">
+    <footer className="border-t border-white/[0.06] py-12">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -22,12 +22,19 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Data Sources */}
+          {/* Navigation */}
           <div>
-            <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-white/60 mb-4">Data Sources</h4>
+            <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-white/60 mb-4">Explore</h4>
             <ul className="space-y-2">
-              {["Academic Research Papers", "Industry Sustainability Reports", "Model Benchmarks (MMLU, Arena)", "HuggingFace Energy Metrics"].map((s) => (
-                <li key={s} className="text-xs text-white/35 hover:text-white/60 transition-colors">{s}</li>
+              {[
+                { label: "Data Explorer", href: "#explorer" },
+                { label: "Key Insights", href: "#insights" },
+                { label: "Methodology & Sources", href: "#methodology" },
+                { label: "Agents & Sensors", href: "#agents" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} className="text-xs text-white/35 hover:text-teal transition-colors">{item.label}</a>
+                </li>
               ))}
             </ul>
           </div>
@@ -36,7 +43,7 @@ export default function Footer() {
           <div>
             <h4 className="font-display font-semibold text-xs uppercase tracking-wider text-white/60 mb-4">About</h4>
             <p className="text-xs text-white/35 leading-relaxed">
-              This dashboard aggregates data from 20+ research sources to provide a unified view of AI's environmental footprint. All energy values are per-prompt estimates under standard inference conditions.
+              This dashboard aggregates data from 20+ research sources to provide a unified view of AI's environmental footprint. All energy values are per-prompt estimates. See our <a href="#methodology" className="text-teal/60 hover:text-teal transition-colors underline underline-offset-2">Methodology</a> section for full transparency on data sourcing and model assumptions.
             </p>
             <div className="mt-4 flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
@@ -50,7 +57,7 @@ export default function Footer() {
             2025 AI Energy & Environmental Impact Dashboard. Research data compiled for educational purposes.
           </p>
           <p className="text-[11px] text-white/25 font-data">
-            v1.0 — 30 models · 20+ sources
+            v2.0 — 30 models · 20+ sources · Full methodology
           </p>
         </div>
       </div>

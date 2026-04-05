@@ -7,6 +7,8 @@ import HeroSection from "@/components/HeroSection";
 import StatsOverview from "@/components/StatsOverview";
 import DataExplorer from "@/components/DataExplorer";
 import InsightsSection from "@/components/InsightsSection";
+import MethodologySection from "@/components/MethodologySection";
+import AgentsSection from "@/components/AgentsSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -18,6 +20,8 @@ export default function Home() {
         <StatsOverview />
         <DataExplorer />
         <InsightsSection />
+        <MethodologySection />
+        <AgentsSection />
       </main>
       <Footer />
     </div>
