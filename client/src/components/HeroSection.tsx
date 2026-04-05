@@ -48,7 +48,7 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <img
           src={HERO_BG}
-          alt=""
+          alt="Abstract digital landscape representing AI energy data flows"
           className="w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/60 via-[#0B1120]/40 to-[#0B1120]" />

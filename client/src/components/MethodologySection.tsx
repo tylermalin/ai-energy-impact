@@ -190,7 +190,7 @@ export default function MethodologySection() {
           transition={{ duration: 0.5 }}
           className="mb-10 rounded-xl border border-white/[0.06] overflow-hidden relative h-[200px] glow-border"
         >
-          <img src={METHODOLOGY_BG} alt="" className="w-full h-full object-cover" />
+          <img src={METHODOLOGY_BG} alt="Abstract visualization of scientific data measurement and methodology" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120]/80 via-[#0B1120]/50 to-transparent" />
           <div className="absolute bottom-6 left-6">
             <h3 className="font-display font-bold text-lg text-white">Measurement & Verification</h3>
