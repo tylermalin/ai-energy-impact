@@ -5,14 +5,30 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import SensorsDemo from "./pages/SensorsDemo";
+import { lazy, Suspense } from "react";
 
+const SensorsDemo = lazy(() => import("./pages/SensorsDemo"));
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-[#0B1120] flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-teal-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-gray-400 font-mono text-sm">Loading sensors...</p>
+      </div>
+    </div>
+  );
+}
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
-      <Route path={"/sensors"} component={SensorsDemo} />
+      <Route path={"/sensors"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <SensorsDemo />
+        </Suspense>
+      </Route>
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
