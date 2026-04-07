@@ -33,6 +33,7 @@ export default function Footer() {
                 { label: "Key Insights", href: "#insights" },
                 { label: "Methodology & Sources", href: "#methodology" },
                 { label: "Agents & Sensors", href: "#agents" },
+                { label: "Sensor Demo", href: "/sensors" },
                 { label: "Contribute Data", href: "#contribute" },
               ].map((item) => (
                 <li key={item.label}>

@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { label: "Insights", href: "/#insights" },
   { label: "Methodology", href: "/#methodology" },
   { label: "Agents & Sensors", href: "/#agents" },
+  { label: "Sensor Demo", href: "/sensors" },
   { label: "Contribute", href: "/#contribute" },
 ];
 
@@ -39,7 +40,7 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
             {NAV_ITEMS.map((item) => {
-              const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+              const isActive = item.href === "/" ? location === "/" : location.startsWith(item.href.replace("/#", "/"));
               return (
                 <a
                   key={item.label}

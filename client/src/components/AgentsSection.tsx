@@ -27,6 +27,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { AICO2_METHODOLOGY_URL } from "@/lib/data";
+import { Link } from "wouter";
 
 const SENSOR_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310419663031887970/RntCY6FmRCfuLPXHtAP4Lb/sensor-datacenter-TZds8SaGEfSaUzEUwyS42f.webp";
 
@@ -470,6 +471,14 @@ export default function AgentsSection() {
                   Read the Full Mālama AICo2 Methodology
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </a>
+                <Link
+                  href="/sensors"
+                  className="inline-flex items-center gap-2.5 mt-3 px-5 py-3 rounded-lg border border-teal/30 text-teal font-display font-semibold text-sm hover:bg-teal/10 transition-all group"
+                >
+                  <Radio className="w-4.5 h-4.5" />
+                  Explore Live Sensor Demo
+                  <ArrowRight className="w-3.5 h-3.5 opacity-60 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </div>
             </div>
 
