@@ -2,7 +2,7 @@
  * Design: Data Observatory — Scientific Instrument Aesthetic
  * ContributeSection: Contact form for researchers, operators, and contributors
  * to submit better data, corrections, new sources, or methodology improvements.
- * Static frontend — form submits via mailto or shows a success state.
+ * Submits via tRPC to the backend API with owner notifications.
  */
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
@@ -17,42 +17,52 @@ import {
   Mail,
   Building2,
   MessageSquare,
-  ChevronDown,
   FileText,
   Radio,
   ArrowRight,
   FileDown,
   ExternalLink,
+  Loader2,
+  AlertCircle,
+  Wifi,
 } from "lucide-react";
 import { AICO2_METHODOLOGY_URL } from "@/lib/data";
+import { trpc } from "@/lib/trpc";
 
 /* ------------------------------------------------------------------ */
 /*  CONTRIBUTION TYPES                                                 */
 /* ------------------------------------------------------------------ */
 const CONTRIBUTION_TYPES = [
   {
-    id: "data",
+    id: "new_model_data" as const,
     label: "New Data Source",
     icon: Database,
     description: "Submit a new research paper, benchmark, or dataset we should incorporate",
     color: "teal",
   },
   {
-    id: "correction",
+    id: "correction" as const,
     label: "Data Correction",
     icon: Bug,
     description: "Identify an error in our current data or calculations that needs fixing",
     color: "amber",
   },
   {
-    id: "methodology",
+    id: "methodology" as const,
     label: "Methodology Improvement",
     icon: FlaskConical,
     description: "Propose a better measurement approach, formula, or assumption",
     color: "teal",
   },
   {
-    id: "general",
+    id: "sensor_data" as const,
+    label: "Sensor / dMRV Data",
+    icon: Wifi,
+    description: "Share real-time sensor measurements or dMRV data from data center deployments",
+    color: "teal",
+  },
+  {
+    id: "other" as const,
     label: "General Feedback",
     icon: Lightbulb,
     description: "Share insights, partnership ideas, or other suggestions",
@@ -76,46 +86,53 @@ export default function ContributeSection() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const [contributionType, setContributionType] = useState<ContributionType>("data");
+  const [contributionType, setContributionType] = useState<ContributionType>("new_model_data");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
-  const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [dataUrl, setDataUrl] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const selectedType = CONTRIBUTION_TYPES.find((t) => t.id === contributionType)!;
 
+  const submitMutation = trpc.contributions.submit.useMutation({
+    onSuccess: () => {
+      setSubmitted(true);
+      setErrorMsg("");
+    },
+    onError: (err) => {
+      setErrorMsg(err.message || "Something went wrong. Please try again.");
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
 
-    const typeLabel = selectedType.label;
-    const mailSubject = encodeURIComponent(
-      `[AI Energy Impact] ${typeLabel}: ${subject || "Contribution"}`
-    );
-    const mailBody = encodeURIComponent(
-      `Contribution Type: ${typeLabel}\n` +
-        `Name: ${name}\n` +
-        `Organization: ${organization || "N/A"}\n` +
-        `Email: ${email}\n\n` +
-        `Subject: ${subject}\n\n` +
-        `Message:\n${message}`
-    );
-
-    window.open(`mailto:contribute@aienergy.impact?subject=${mailSubject}&body=${mailBody}`, "_self");
-    setSubmitted(true);
+    submitMutation.mutate({
+      name,
+      email,
+      organization: organization || undefined,
+      contributionType,
+      message,
+      dataUrl: dataUrl || undefined,
+    });
   };
 
   const resetForm = () => {
     setName("");
     setEmail("");
     setOrganization("");
-    setSubject("");
     setMessage("");
+    setDataUrl("");
     setSubmitted(false);
-    setContributionType("data");
+    setErrorMsg("");
+    setContributionType("new_model_data");
   };
+
+  const isSubmitting = submitMutation.isPending;
 
   return (
     <section id="contribute" className="py-20 relative" ref={ref}>
@@ -293,9 +310,8 @@ export default function ContributeSection() {
                     Thank You for Contributing
                   </h3>
                   <p className="text-white/50 max-w-md mx-auto mb-2 text-sm leading-relaxed">
-                    Your email client should have opened with the pre-filled message. If it didn't,
-                    you can reach us directly at{" "}
-                    <span className="text-teal font-medium">contribute@aienergy.impact</span>
+                    Your submission has been received and stored in our database. Our research team
+                    will review it and follow up via email if we have questions.
                   </p>
                   <p className="text-white/35 text-xs mb-8">
                     Every contribution helps build more accurate, trusted environmental impact data.
@@ -336,6 +352,14 @@ export default function ContributeSection() {
                     </span>
                   </div>
 
+                  {/* Error message */}
+                  {errorMsg && (
+                    <div className="mb-5 rounded-lg border border-red-500/20 bg-red-500/[0.06] px-4 py-3 flex items-start gap-3">
+                      <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                      <p className="text-xs text-red-300 leading-relaxed">{errorMsg}</p>
+                    </div>
+                  )}
+
                   <div className="space-y-5">
                     {/* Row: Name + Email */}
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -350,7 +374,8 @@ export default function ContributeSection() {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           placeholder="Dr. Jane Smith"
-                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors"
+                          disabled={isSubmitting}
+                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors disabled:opacity-50"
                         />
                       </div>
                       <div>
@@ -364,12 +389,13 @@ export default function ContributeSection() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="jane@university.edu"
-                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors"
+                          disabled={isSubmitting}
+                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors disabled:opacity-50"
                         />
                       </div>
                     </div>
 
-                    {/* Row: Organization + Subject */}
+                    {/* Row: Organization + Data URL */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="flex items-center gap-1.5 text-xs font-medium text-white/50 mb-2">
@@ -381,21 +407,22 @@ export default function ContributeSection() {
                           value={organization}
                           onChange={(e) => setOrganization(e.target.value)}
                           placeholder="MIT, Google DeepMind, etc."
-                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors"
+                          disabled={isSubmitting}
+                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors disabled:opacity-50"
                         />
                       </div>
                       <div>
                         <label className="flex items-center gap-1.5 text-xs font-medium text-white/50 mb-2">
-                          <FileText className="w-3 h-3" />
-                          Subject <span className="text-signal-red">*</span>
+                          <ExternalLink className="w-3 h-3" />
+                          Data / Paper URL
                         </label>
                         <input
-                          type="text"
-                          required
-                          value={subject}
-                          onChange={(e) => setSubject(e.target.value)}
-                          placeholder="Updated H100 inference measurements"
-                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors"
+                          type="url"
+                          value={dataUrl}
+                          onChange={(e) => setDataUrl(e.target.value)}
+                          placeholder="https://doi.org/10.xxxx or link to dataset"
+                          disabled={isSubmitting}
+                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -411,16 +438,19 @@ export default function ContributeSection() {
                         rows={6}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
+                        disabled={isSubmitting}
                         placeholder={
-                          contributionType === "data"
+                          contributionType === "new_model_data"
                             ? "Describe the data source, include DOI/URL, and note the hardware/conditions used for measurement..."
                             : contributionType === "correction"
                             ? "Identify the specific data point or calculation that needs correction, and provide the corrected value with source..."
                             : contributionType === "methodology"
                             ? "Describe the proposed methodology improvement, why current approach is insufficient, and supporting evidence..."
+                            : contributionType === "sensor_data"
+                            ? "Describe the sensor deployment, data center location, measurement types, and how the data was collected..."
                             : "Share your feedback, insights, or partnership ideas..."
                         }
-                        className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors resize-none leading-relaxed"
+                        className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-teal/30 focus:ring-1 focus:ring-teal/20 focus:outline-none transition-colors resize-none leading-relaxed disabled:opacity-50"
                       />
                     </div>
 
@@ -428,23 +458,33 @@ export default function ContributeSection() {
                     <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-4 py-3 flex items-start gap-3">
                       <Radio className="w-4 h-4 text-teal/40 shrink-0 mt-0.5" />
                       <p className="text-[11px] text-white/30 leading-relaxed">
-                        Submissions are reviewed by our research team. Accepted contributions will
-                        be credited in the data sources table. We prioritize peer-reviewed research
-                        but welcome all evidence-based input.
+                        Submissions are stored securely and reviewed by our research team. Accepted
+                        contributions will be credited in the data sources table. We prioritize
+                        peer-reviewed research but welcome all evidence-based input.
                       </p>
                     </div>
 
                     {/* Submit */}
                     <div className="flex items-center justify-between pt-2">
                       <p className="text-[11px] text-white/20 hidden sm:block">
-                        Opens your email client with a pre-filled message
+                        Submissions are stored and you will be notified by email
                       </p>
                       <button
                         type="submit"
-                        className="inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-all shadow-lg shadow-teal/20 hover:shadow-teal/30 ml-auto"
+                        disabled={isSubmitting}
+                        className="inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-all shadow-lg shadow-teal/20 hover:shadow-teal/30 ml-auto disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        <Send className="w-4 h-4" />
-                        Send Contribution
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4" />
+                            Send Contribution
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
