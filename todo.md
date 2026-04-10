@@ -6,3 +6,9 @@
 - [x] Update frontend ContributeSection to submit via tRPC API
 - [x] Set up owner notifications for new submissions
 - [x] Write vitest tests for the contributions API
+- [x] Build admin dashboard page at /admin
+- [x] Add contributions table with sorting and filtering
+- [x] Add status update functionality (pending/reviewing/accepted/rejected)
+- [x] Add admin route protection (role-based access)
+- [x] Add admin link to navigation
+- [x] Test admin dashboard end-to-end

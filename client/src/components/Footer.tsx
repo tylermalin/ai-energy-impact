@@ -35,6 +35,7 @@ export default function Footer() {
                 { label: "Agents & Sensors", href: "#agents" },
                 { label: "Sensor Demo", href: "/sensors" },
                 { label: "Contribute Data", href: "#contribute" },
+                { label: "Admin", href: "/admin" },
               ].map((item) => (
                 <li key={item.label}>
                   <a href={item.href} className="text-xs text-white/35 hover:text-teal transition-colors">{item.label}</a>

@@ -8,25 +8,31 @@ import Home from "./pages/Home";
 import { lazy, Suspense } from "react";
 
 const SensorsDemo = lazy(() => import("./pages/SensorsDemo"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 function LoadingFallback() {
   return (
     <div className="min-h-screen bg-[#0B1120] flex items-center justify-center">
       <div className="text-center">
         <div className="w-8 h-8 border-2 border-teal-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-gray-400 font-mono text-sm">Loading sensors...</p>
+        <p className="text-gray-400 font-mono text-sm">Loading...</p>
       </div>
     </div>
   );
 }
+
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/sensors"}>
         <Suspense fallback={<LoadingFallback />}>
           <SensorsDemo />
+        </Suspense>
+      </Route>
+      <Route path={"/admin"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <Admin />
         </Suspense>
       </Route>
       <Route path={"/404"} component={NotFound} />
@@ -36,17 +42,11 @@ function Router() {
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider
         defaultTheme="dark"
-        // switchable
       >
         <TooltipProvider>
           <Toaster />
