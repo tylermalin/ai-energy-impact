@@ -1,6 +1,7 @@
 /**
  * Design: Data Observatory — Scientific Instrument Aesthetic
  * Hero: Cinematic hero with observatory background, animated counters, and key insight
+ * Now accepts optional siteSettings from Sanity CMS for dynamic text/CTAs
  */
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
@@ -41,7 +42,46 @@ const stats = [
   { icon: Droplets, label: "Max Water / Prompt", value: 1000, suffix: " mL", decimals: 0, color: "text-cyan-400" },
 ];
 
-export default function HeroSection() {
+/** Defaults used when Sanity data hasn't loaded yet or fields are empty */
+const DEFAULTS = {
+  heroTitle: "The Environmental Cost of",
+  heroHighlight: "Artificial Intelligence",
+  heroDescription:
+    "A comprehensive analysis of energy consumption, carbon emissions, and water usage across 30 AI models — from lightweight text classifiers to frontier reasoning systems.",
+  ctaExploreLabel: "Explore Data",
+  ctaMethodologyLabel: "Methodology",
+  ctaAgentsLabel: "Agents & Sensors",
+  ctaPaperLabel: "AICo2 Paper",
+  ctaPaperUrl: AICO2_METHODOLOGY_URL,
+};
+
+interface SiteSettings {
+  heroTitle?: string;
+  heroHighlight?: string;
+  heroDescription?: string;
+  ctaExploreLabel?: string;
+  ctaMethodologyLabel?: string;
+  ctaAgentsLabel?: string;
+  ctaPaperLabel?: string;
+  ctaPaperUrl?: string;
+}
+
+interface HeroSectionProps {
+  siteSettings?: SiteSettings;
+}
+
+export default function HeroSection({ siteSettings }: HeroSectionProps) {
+  const s = siteSettings;
+
+  const heroTitle = s?.heroTitle || DEFAULTS.heroTitle;
+  const heroHighlight = s?.heroHighlight || DEFAULTS.heroHighlight;
+  const heroDescription = s?.heroDescription || DEFAULTS.heroDescription;
+  const ctaExploreLabel = s?.ctaExploreLabel || DEFAULTS.ctaExploreLabel;
+  const ctaMethodologyLabel = s?.ctaMethodologyLabel || DEFAULTS.ctaMethodologyLabel;
+  const ctaAgentsLabel = s?.ctaAgentsLabel || DEFAULTS.ctaAgentsLabel;
+  const ctaPaperLabel = s?.ctaPaperLabel || DEFAULTS.ctaPaperLabel;
+  const ctaPaperUrl = s?.ctaPaperUrl || DEFAULTS.ctaPaperUrl;
+
   return (
     <section className="relative min-h-[85vh] flex items-center overflow-hidden">
       {/* Background image */}
@@ -70,14 +110,14 @@ export default function HeroSection() {
             </div>
 
             <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] tracking-tight text-white mb-6">
-              The Environmental Cost of{" "}
+              {heroTitle}{" "}
               <span className="bg-gradient-to-r from-teal via-cyan-400 to-teal bg-clip-text text-transparent">
-                Artificial Intelligence
+                {heroHighlight}
               </span>
             </h1>
 
             <p className="text-lg text-white/60 leading-relaxed max-w-xl mb-10 font-light">
-              A comprehensive analysis of energy consumption, carbon emissions, and water usage across 30 AI models — from lightweight text classifiers to frontier reasoning systems.
+              {heroDescription}
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -85,29 +125,29 @@ export default function HeroSection() {
                 href="#explorer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-teal text-[#0B1120] font-display font-semibold text-sm hover:bg-teal/90 transition-colors shadow-lg shadow-teal/20"
               >
-                Explore Data
+                {ctaExploreLabel}
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </a>
               <a
                 href="#methodology"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 text-white/80 font-display font-medium text-sm hover:bg-white/[0.04] hover:border-white/20 transition-colors"
               >
-                Methodology
+                {ctaMethodologyLabel}
               </a>
               <a
                 href="#agents"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-amber/20 text-amber/80 font-display font-medium text-sm hover:bg-amber/[0.04] hover:border-amber/30 transition-colors"
               >
-                Agents & Sensors
+                {ctaAgentsLabel}
               </a>
               <a
-                href={AICO2_METHODOLOGY_URL}
+                href={ctaPaperUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-teal/20 text-teal/80 font-display font-medium text-sm hover:bg-teal/[0.04] hover:border-teal/30 transition-colors"
               >
                 <FileDown className="w-4 h-4" />
-                AICo2 Paper
+                {ctaPaperLabel}
               </a>
             </div>
           </motion.div>

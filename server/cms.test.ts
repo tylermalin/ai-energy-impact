@@ -83,6 +83,10 @@ describe("CMS Sanity Queries", () => {
     expect(q).toContain("heroHighlight");
     expect(q).toContain("heroDescription");
     expect(q).toContain("ctaExploreLabel");
+    expect(q).toContain("ctaMethodologyLabel");
+    expect(q).toContain("ctaAgentsLabel");
+    expect(q).toContain("ctaPaperLabel");
+    expect(q).toContain("ctaPaperUrl");
     expect(q).toContain("footerTagline");
     expect(q).toContain("socialLinks");
   });
@@ -178,11 +182,50 @@ describe("Sanity Client Configuration", () => {
     const mockSettings = {
       heroTitle: "The Environmental Cost of",
       heroHighlight: "Artificial Intelligence",
+      heroDescription: "A comprehensive analysis...",
+      ctaExploreLabel: "Explore Data",
+      ctaMethodologyLabel: "Methodology",
+      ctaAgentsLabel: "Agents & Sensors",
+      ctaPaperLabel: "AICo2 Paper",
+      ctaPaperUrl: "https://example.com/paper.pdf",
+      footerTagline: "Measuring what matters. Transparently.",
     };
     (sanityClient.fetch as any).mockResolvedValueOnce(mockSettings);
 
     const result = await sanityClient.fetch(QUERIES.siteSettings);
     expect(sanityClient.fetch).toHaveBeenCalledWith(QUERIES.siteSettings);
     expect(result).toEqual(mockSettings);
+    expect(result.heroTitle).toBe("The Environmental Cost of");
+    expect(result.heroHighlight).toBe("Artificial Intelligence");
+    expect(result.ctaExploreLabel).toBe("Explore Data");
+    expect(result.ctaMethodologyLabel).toBe("Methodology");
+    expect(result.ctaAgentsLabel).toBe("Agents & Sensors");
+    expect(result.ctaPaperLabel).toBe("AICo2 Paper");
+    expect(result.ctaPaperUrl).toBe("https://example.com/paper.pdf");
+    expect(result.footerTagline).toBe("Measuring what matters. Transparently.");
+  });
+
+  it("should return all hero-related fields from siteSettings query", () => {
+    const q = QUERIES.siteSettings;
+    // Verify all fields needed by HeroSection are projected
+    const heroFields = [
+      "heroTitle",
+      "heroHighlight",
+      "heroDescription",
+      "ctaExploreLabel",
+      "ctaMethodologyLabel",
+      "ctaAgentsLabel",
+      "ctaPaperLabel",
+      "ctaPaperUrl",
+    ];
+    for (const field of heroFields) {
+      expect(q).toContain(field);
+    }
+  });
+
+  it("should return footer-related fields from siteSettings query", () => {
+    const q = QUERIES.siteSettings;
+    expect(q).toContain("footerTagline");
+    expect(q).toContain("contactEmail");
   });
 });

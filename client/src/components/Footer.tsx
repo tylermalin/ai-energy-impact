@@ -1,11 +1,23 @@
 /**
  * Design: Data Observatory — Scientific Instrument Aesthetic
  * Footer: Minimal observatory-style footer
+ * Accepts optional siteSettings from Sanity CMS for dynamic tagline
  */
 import { Zap, FileDown } from "lucide-react";
 import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
-export default function Footer() {
+interface SiteSettings {
+  footerTagline?: string;
+  ctaPaperUrl?: string;
+}
+
+interface FooterProps {
+  siteSettings?: SiteSettings;
+}
+
+export default function Footer({ siteSettings }: FooterProps) {
+  const paperUrl = siteSettings?.ctaPaperUrl || AICO2_METHODOLOGY_URL;
+
   return (
     <footer className="border-t border-white/[0.06] py-12">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,7 +65,7 @@ export default function Footer() {
               This dashboard aggregates data from 20+ research sources to provide a unified view of AI's environmental footprint. All energy values are per-prompt estimates. See our <a href="#methodology" className="text-teal/60 hover:text-teal transition-colors underline underline-offset-2">Methodology</a> section for full transparency on data sourcing and model assumptions.
             </p>
             <a
-              href={AICO2_METHODOLOGY_URL}
+              href={paperUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-teal/50 hover:text-teal transition-colors"
@@ -70,7 +82,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-[11px] text-white/25">
-            2025 AI Energy & Environmental Impact Dashboard. Research data compiled for educational purposes.
+            {siteSettings?.footerTagline || "2025 AI Energy & Environmental Impact Dashboard. Research data compiled for educational purposes."}
           </p>
           <p className="text-[11px] text-white/25 font-data">
             v2.0 — 30 models · 20+ sources · Full methodology

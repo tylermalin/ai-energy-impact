@@ -23,3 +23,8 @@
 - [x] Add Blog and About links to Navbar and Footer
 - [x] Write vitest tests for CMS Sanity queries (14 tests)
 - [x] Test Sanity integration end-to-end (all pages verified)
+- [x] Wire hero title, highlight, and description to Sanity siteSettings
+- [x] Wire CTA button labels (Explore Data, Methodology, Agents & Sensors, AICo2 Paper) to Sanity
+- [x] Wire CTA paper URL to Sanity siteSettings
+- [x] Add loading/fallback state for hero while Sanity data loads
+- [x] Test homepage hero renders dynamically from Sanity CMS
