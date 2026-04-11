@@ -9,6 +9,9 @@ import { lazy, Suspense } from "react";
 
 const SensorsDemo = lazy(() => import("./pages/SensorsDemo"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const About = lazy(() => import("./pages/About"));
 
 function LoadingFallback() {
   return (
@@ -28,6 +31,21 @@ function Router() {
       <Route path={"/sensors"}>
         <Suspense fallback={<LoadingFallback />}>
           <SensorsDemo />
+        </Suspense>
+      </Route>
+      <Route path={"/blog"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <Blog />
+        </Suspense>
+      </Route>
+      <Route path={"/blog/:slug"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <BlogPost />
+        </Suspense>
+      </Route>
+      <Route path={"/about"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <About />
         </Suspense>
       </Route>
       <Route path={"/admin"}>

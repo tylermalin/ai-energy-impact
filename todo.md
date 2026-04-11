@@ -12,3 +12,14 @@
 - [x] Add admin route protection (role-based access)
 - [x] Add admin link to navigation
 - [x] Test admin dashboard end-to-end
+- [x] Install Sanity client dependencies (@sanity/client, @sanity/image-url)
+- [x] Configure Sanity client with project ID 47j8h9i3 and production dataset
+- [x] Create Sanity schemas (blog posts, AI models, team members, site settings)
+- [x] Seed Sanity with content (3 blog posts, 30 AI models, 1 team member, 1 site settings)
+- [x] Build tRPC CMS router with Sanity queries (posts, postBySlug, team, siteSettings, models)
+- [x] Build /blog page with featured post, category filters, search
+- [x] Build /blog/:slug individual post page with block content rendering
+- [x] Build /about page with team members and mission section
+- [x] Add Blog and About links to Navbar and Footer
+- [x] Write vitest tests for CMS Sanity queries (14 tests)
+- [x] Test Sanity integration end-to-end (all pages verified)

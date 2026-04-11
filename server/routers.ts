@@ -10,6 +10,8 @@ import {
   listContributions,
   updateContributionStatus,
 } from "./db";
+import { sanityClient } from "./sanity";
+import { QUERIES } from "./sanity-schemas";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -22,6 +24,48 @@ export const appRouter = router({
       return {
         success: true,
       } as const;
+    }),
+  }),
+
+  // Sanity CMS content
+  cms: router({
+    /** Public: get all blog posts */
+    posts: publicProcedure.query(async () => {
+      return sanityClient.fetch(QUERIES.allPosts);
+    }),
+
+    /** Public: get featured blog posts */
+    featuredPosts: publicProcedure.query(async () => {
+      return sanityClient.fetch(QUERIES.featuredPosts);
+    }),
+
+    /** Public: get a single blog post by slug */
+    postBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return sanityClient.fetch(QUERIES.postBySlug, { slug: input.slug });
+      }),
+
+    /** Public: get posts by category */
+    postsByCategory: publicProcedure
+      .input(z.object({ category: z.string() }))
+      .query(async ({ input }) => {
+        return sanityClient.fetch(QUERIES.postsByCategory, { category: input.category });
+      }),
+
+    /** Public: get all active AI models from Sanity */
+    models: publicProcedure.query(async () => {
+      return sanityClient.fetch(QUERIES.allModels);
+    }),
+
+    /** Public: get all team members */
+    team: publicProcedure.query(async () => {
+      return sanityClient.fetch(QUERIES.allTeamMembers);
+    }),
+
+    /** Public: get site settings */
+    siteSettings: publicProcedure.query(async () => {
+      return sanityClient.fetch(QUERIES.siteSettings);
     }),
   }),
 

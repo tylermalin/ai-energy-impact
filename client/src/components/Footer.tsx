@@ -34,6 +34,8 @@ export default function Footer() {
                 { label: "Methodology & Sources", href: "#methodology" },
                 { label: "Agents & Sensors", href: "#agents" },
                 { label: "Sensor Demo", href: "/sensors" },
+                { label: "Blog", href: "/blog" },
+                { label: "About", href: "/about" },
                 { label: "Contribute Data", href: "#contribute" },
                 { label: "Admin", href: "/admin" },
               ].map((item) => (
