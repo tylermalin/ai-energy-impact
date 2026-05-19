@@ -284,6 +284,15 @@ export default function AgentsSection() {
           <p className="text-white/50 max-w-3xl leading-relaxed">
             Every number on this dashboard is an estimate. The real goal is to replace estimation with measurement — deploying hardware-level sensors inside data centers to create an environment of trusted, objective, verifiable data that can dynamically and drastically reduce AI's environmental impact.
           </p>
+          <div className="mt-5">
+            <Link
+              href="/sensors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-teal/10 border border-teal/20 text-teal text-sm font-medium hover:bg-teal/20 transition-all"
+            >
+              View live sensor demo
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </motion.div>
 
         {/* Sensor datacenter visual */}

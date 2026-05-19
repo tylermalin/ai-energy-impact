@@ -233,10 +233,13 @@ export default function Blog() {
               </p>
               <p>
                 The longer-term play is to replace estimates with measurements. The companion
-                Mālama Labs program is developing hardware-signed dMRV sensors that will eventually
-                attest to energy and water consumption directly from inside data centers — turning
-                what is currently a reporting exercise into a verifiable one. Until then, this
-                dashboard does the best work that public data alone allows.
+                Mālama Labs program is developing{" "}
+                <Link href="/sensors" className="text-teal/80 hover:text-teal underline underline-offset-2 transition-colors">
+                  hardware-signed dMRV sensors
+                </Link>
+                {" "}that will eventually attest to energy and water consumption directly from inside
+                data centers — turning what is currently a reporting exercise into a verifiable one.
+                Until then, this dashboard does the best work that public data alone allows.
               </p>
               <p>
                 If you have better data, a methodology improvement, or a model we should be

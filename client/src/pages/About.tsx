@@ -201,6 +201,12 @@ export default function About() {
                 <ExternalLink className="w-3.5 h-3.5" />
                 Mālama Labs
               </a>
+              <a
+                href="/sensors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/70 text-sm font-medium hover:bg-white/[0.06] transition-all"
+              >
+                View Sensor Demo
+              </a>
             </div>
           </div>
 
