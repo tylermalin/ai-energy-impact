@@ -20,7 +20,6 @@
 
 import "dotenv/config";
 import express from "express";
-import serverless from "serverless-http";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./_core/oauth";
 import { registerIngestRoutes } from "./_core/ingest";
@@ -51,6 +50,6 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-const handler = serverless(app);
-
-export default handler;
+// Vercel's Node runtime calls the default export as (req, res). An Express
+// `app` is itself a (req, res) handler — pass it directly, no adapter needed.
+export default app;
