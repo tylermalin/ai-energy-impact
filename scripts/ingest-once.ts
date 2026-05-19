@@ -10,11 +10,15 @@
  *   DATABASE_URL=mysql://... pnpm tsx scripts/ingest-once.ts benchlm    # runs one adapter
  */
 
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env.local" });
+loadEnv({ path: ".env" });
+
 import { runAll, runOne } from "../lib/ingestion/run";
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL && !process.env.TURSO_DATABASE_URL) {
   // eslint-disable-next-line no-console
-  console.error("DATABASE_URL is required.");
+  console.error("DATABASE_URL or TURSO_DATABASE_URL is required.");
   process.exit(1);
 }
 
