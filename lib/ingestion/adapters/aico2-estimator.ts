@@ -13,8 +13,8 @@
  * which rows still need coverage.
  */
 
-import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
 import { eq, isNotNull } from "drizzle-orm";
+import { getDb } from "../../../server/_core/db-client";
 import { firstOfMonth, makeFingerprint } from "../fingerprint";
 import {
   deriveDownstream,
@@ -31,17 +31,6 @@ import type { Adapter, NormalizedRecord } from "../types";
 
 const SOURCE_NAME = "Mālama AICo2 (estimated)";
 const SOURCE_URL = "https://aipower.fyi/methodology";
-
-let _db: MySql2Database | null = null;
-function getDb(): MySql2Database {
-  if (!_db) {
-    if (!process.env.DATABASE_URL) {
-      throw new Error("DATABASE_URL not set");
-    }
-    _db = drizzle(process.env.DATABASE_URL);
-  }
-  return _db;
-}
 
 /**
  * Picks a single seed row per (modelName, category) to base the estimate on.

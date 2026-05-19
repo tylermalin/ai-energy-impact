@@ -26,20 +26,9 @@
  * same (modelName, category).
  */
 
-import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
 import { eq } from "drizzle-orm";
 import { modelEnergyRecords, type ModelEnergyRecord } from "../../drizzle/schema";
-
-let _db: MySql2Database | null = null;
-function getDb(): MySql2Database {
-  if (!_db) {
-    if (!process.env.DATABASE_URL) {
-      throw new Error("DATABASE_URL not set");
-    }
-    _db = drizzle(process.env.DATABASE_URL);
-  }
-  return _db;
-}
+import { getDb } from "../../server/_core/db-client";
 
 const CLASSIFICATION_RANK: Record<string, number> = {
   measured: 3,

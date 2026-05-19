@@ -14,7 +14,6 @@
  *     summary JSON.
  */
 
-import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
 import { eq, inArray, sql } from "drizzle-orm";
 import {
   modelEnergyRecords,
@@ -24,20 +23,8 @@ import {
   type InsertPendingUpdate,
   type ModelEnergyRecord,
 } from "../../drizzle/schema";
+import { getDb } from "../../server/_core/db-client";
 import type { AdapterRunResult, NormalizedRecord, RunSummary } from "./types";
-
-// Lazy db handle so this module can be imported by code that runs without
-// DATABASE_URL set (e.g. unit tests of pure adapters).
-let _db: MySql2Database | null = null;
-function getDb(): MySql2Database {
-  if (!_db) {
-    if (!process.env.DATABASE_URL) {
-      throw new Error("DATABASE_URL not set — ingestion storage requires a live DB connection.");
-    }
-    _db = drizzle(process.env.DATABASE_URL);
-  }
-  return _db;
-}
 
 /** Fields the orchestrator compares to decide "changed" vs "unchanged". */
 const COMPARED_FIELDS = [
@@ -197,16 +184,16 @@ export async function applyAdapterResults(
  */
 export async function openIngestionRun(adapter: string): Promise<number> {
   const db = getDb();
-  const result = await db.insert(ingestionRuns).values({
-    adapter,
-    status: "running",
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const insertId = (result as any)?.[0]?.insertId;
-  if (typeof insertId !== "number") {
+  // libSQL/SQLite: use RETURNING to get the inserted id back portably.
+  const rows = await db
+    .insert(ingestionRuns)
+    .values({ adapter, status: "running" })
+    .returning({ id: ingestionRuns.id });
+  const id = rows[0]?.id;
+  if (typeof id !== "number") {
     throw new Error("openIngestionRun: could not determine insert id");
   }
-  return insertId;
+  return id;
 }
 
 export async function closeIngestionRun(

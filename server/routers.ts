@@ -1,11 +1,11 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
-import { drizzle } from "drizzle-orm/mysql2";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { notifyOwner } from "./_core/notification";
 import { systemRouter } from "./_core/systemRouter";
 import { adminKeyProcedure, adminProcedure, publicProcedure, router } from "./_core/trpc";
+import { getDb } from "./_core/db-client";
 import {
   createContribution,
   getContributionById,
@@ -21,14 +21,6 @@ import {
 } from "../drizzle/schema";
 import { ADAPTERS, runAll, runOne } from "../lib/ingestion/run";
 import { getDashboardModels } from "../lib/dashboard/models";
-
-// Lazy DB handle for the new ingestion mutations.
-function getDb() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL not set.");
-  }
-  return drizzle(process.env.DATABASE_URL);
-}
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly

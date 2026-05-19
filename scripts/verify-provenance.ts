@@ -9,8 +9,8 @@
  *   DATABASE_URL=mysql://... pnpm tsx scripts/verify-provenance.ts
  */
 
-import { drizzle } from "drizzle-orm/mysql2";
 import { modelEnergyRecords } from "../drizzle/schema";
+import { getDb } from "../server/_core/db-client";
 
 if (!process.env.DATABASE_URL) {
   // eslint-disable-next-line no-console
@@ -18,7 +18,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const db = drizzle(process.env.DATABASE_URL);
+const db = getDb();
 
 const REQUIRED_FIELDS = [
   "modelName",

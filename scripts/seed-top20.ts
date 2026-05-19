@@ -22,13 +22,13 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHash } from "node:crypto";
-import { drizzle } from "drizzle-orm/mysql2";
 import { and, eq, sql } from "drizzle-orm";
 import { parse as parseYaml } from "yaml";
 import {
   modelEnergyRecords,
   type InsertModelEnergyRecord,
 } from "../drizzle/schema";
+import { getDb } from "../server/_core/db-client";
 
 if (!process.env.DATABASE_URL) {
   // eslint-disable-next-line no-console
@@ -36,7 +36,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const db = drizzle(process.env.DATABASE_URL);
+const db = getDb();
 
 type SeedCategory = "text" | "image" | "video" | "code";
 

@@ -17,9 +17,9 @@
  * apply since we use direct UPDATE statements keyed on row id.
  */
 
-import { drizzle } from "drizzle-orm/mysql2";
 import { and, eq, isNotNull, isNull, or } from "drizzle-orm";
 import { modelEnergyRecords } from "../drizzle/schema";
+import { getDb } from "../server/_core/db-client";
 import {
   computeCarbonGCO2e,
   computeWaterMl,
@@ -36,7 +36,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const db = drizzle(process.env.DATABASE_URL);
+const db = getDb();
 
 async function main() {
   // Rows that have energy but are missing carbon, water, or methodology audit.

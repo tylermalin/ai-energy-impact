@@ -1,217 +1,268 @@
-import {
-  boolean,
-  double,
-  index,
-  int,
-  json,
-  mysqlEnum,
-  mysqlTable,
-  text,
-  timestamp,
-  uniqueIndex,
-  varchar,
-} from "drizzle-orm/mysql-core";
-
 /**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
+ * Drizzle schema — SQLite (Turso / libSQL).
+ *
+ * Translated from the original MySQL schema during the Vercel Turso
+ * migration. Equivalences applied:
+ *   - mysqlTable          → sqliteTable
+ *   - mysqlEnum           → text(..., { enum: [...] as const })  (string union, no DB-level CHECK)
+ *   - int autoincrement   → integer({ mode: "number" }).primaryKey({ autoIncrement: true })
+ *   - varchar / text      → text                                  (SQLite has no length limit)
+ *   - double / real       → real
+ *   - boolean             → integer({ mode: "boolean" })
+ *   - json                → text({ mode: "json" }).$type<T>()
+ *   - timestamp.defaultNow() → integer({ mode: "timestamp" }).default(sql`(unixepoch())`)
+ *   - onUpdateNow()       → $onUpdate(() => new Date())            (app-side; SQLite has no auto-update)
+ *
+ * Indexes remain. Unique index on sourceFingerprint preserved.
  */
-export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
-  id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
-  openId: varchar("openId", { length: 64 }).notNull().unique(),
+
+import { sql } from "drizzle-orm";
+import {
+  index,
+  integer,
+  real,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
+
+/* ==================================================================
+ * Auth + contributions (pre-existing, ported to SQLite)
+ * ================================================================== */
+
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  openId: text("openId").notNull().unique(),
   name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
+  email: text("email"),
+  loginMethod: text("loginMethod"),
+  role: text("role", { enum: ["user", "admin"] as const })
+    .default("user")
+    .notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updatedAt", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull()
+    .$onUpdate(() => new Date()),
+  lastSignedIn: integer("lastSignedIn", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
 });
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-/**
- * Contributions table — stores researcher/operator form submissions.
- * Each row represents one data contribution or methodology improvement suggestion.
- */
-export const contributions = mysqlTable("contributions", {
-  id: int("id").autoincrement().primaryKey(),
-  /** Contributor's full name */
-  name: varchar("name", { length: 255 }).notNull(),
-  /** Contributor's email address */
-  email: varchar("email", { length: 320 }).notNull(),
-  /** Organization or affiliation */
-  organization: varchar("organization", { length: 255 }),
-  /** Type of contribution */
-  contributionType: mysqlEnum("contributionType", [
-    "new_model_data",
-    "correction",
-    "methodology",
-    "sensor_data",
-    "other",
-  ]).notNull(),
-  /** The main message / description of the contribution */
+export const contributions = sqliteTable("contributions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  organization: text("organization"),
+  contributionType: text("contributionType", {
+    enum: [
+      "new_model_data",
+      "correction",
+      "methodology",
+      "sensor_data",
+      "other",
+    ] as const,
+  }).notNull(),
   message: text("message").notNull(),
-  /** Optional URL to supporting data, paper, or resource */
   dataUrl: text("dataUrl"),
-  /** Review status */
-  status: mysqlEnum("status", ["pending", "reviewed", "accepted", "rejected"])
+  status: text("status", {
+    enum: ["pending", "reviewed", "accepted", "rejected"] as const,
+  })
     .default("pending")
     .notNull(),
-  /** Admin notes on the contribution */
   adminNotes: text("adminNotes"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull(),
+  updatedAt: integer("updatedAt", { mode: "timestamp" })
+    .default(sql`(unixepoch())`)
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 export type Contribution = typeof contributions.$inferSelect;
 export type InsertContribution = typeof contributions.$inferInsert;
 
 /* ==================================================================
- * Phase 1 — Provenance + category-aware schema (operational mirror)
- *
- * Sanity is the canonical store for row-level model data. These MySQL
- * tables are the operational mirror used by the ingestion pipeline
- * (Phase 3): adapters land rows here, humans review in /admin/pending,
- * approved rows are promoted to Sanity. The dashboard reads from
- * Sanity, not from this mirror.
+ * Phase 1 + 3b — Provenance + category-aware + methodology audit
+ * (operational mirror; Sanity is no longer canonical for model data)
  * ================================================================== */
 
-/**
- * model_energy_records — full mirror of the Sanity aiModel schema.
- * Ingestion writes here; promoted-to-Sanity rows are flagged via
- * `promotedAt` so the diff against Sanity remains queryable.
- */
-export const modelEnergyRecords = mysqlTable(
+/** Type-level enums (SQLite has no native enum; these are TS unions). */
+export type ModelCategory = "text" | "image" | "video" | "code" | "audio" | "other";
+export type TaskClass =
+  | "text_generation"
+  | "reasoning"
+  | "image_diffusion"
+  | "video_generation"
+  | "audio_asr"
+  | "classification"
+  | "detection"
+  | "translation"
+  | "agentic_workflow"
+  | "code_swe_task";
+export type EnergyUnit =
+  | "wh_per_inference"
+  | "wh_per_image"
+  | "wh_per_video_second"
+  | "wh_per_coding_task";
+export type Classification = "measured" | "derived" | "estimated";
+export type Confidence = "high" | "medium" | "medium-low" | "low";
+export type PromptClass =
+  | "single_turn_chat"
+  | "long_context"
+  | "tool_use"
+  | "rag"
+  | "multi_turn";
+export type TrainingOrInference = "inference" | "training" | "both";
+export type FacilityClass =
+  | "hyperscale_modern"
+  | "hyperscale_standard"
+  | "enterprise"
+  | "legacy"
+  | "unknown";
+export type ModelStatus = "active" | "sunsetting" | "deprecated";
+
+export const modelEnergyRecords = sqliteTable(
   "model_energy_records",
   {
-    id: int("id").autoincrement().primaryKey(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
 
     // Identity
-    modelName: varchar("modelName", { length: 255 }).notNull(),
-    modelFamily: varchar("modelFamily", { length: 128 }).notNull(),
-    modelVersion: varchar("modelVersion", { length: 128 }),
-    vendor: varchar("vendor", { length: 128 }).notNull(),
-    parameters: varchar("parameters", { length: 64 }),
-    openWeight: boolean("openWeight").default(false).notNull(),
+    modelName: text("modelName").notNull(),
+    modelFamily: text("modelFamily").notNull(),
+    modelVersion: text("modelVersion"),
+    vendor: text("vendor").notNull(),
+    parameters: text("parameters"),
+    openWeight: integer("openWeight", { mode: "boolean" }).default(false).notNull(),
 
     // Categorization
-    category: mysqlEnum("category", ["text", "image", "video", "code", "audio", "other"]).notNull(),
-    taskClass: mysqlEnum("taskClass", [
-      "text_generation",
-      "reasoning",
-      "image_diffusion",
-      "video_generation",
-      "audio_asr",
-      "classification",
-      "detection",
-      "translation",
-      "agentic_workflow",
-      "code_swe_task",
-    ]).notNull(),
-    energyUnit: mysqlEnum("energyUnit", [
-      "wh_per_inference",
-      "wh_per_image",
-      "wh_per_video_second",
-      "wh_per_coding_task",
-    ]).notNull(),
+    category: text("category", {
+      enum: ["text", "image", "video", "code", "audio", "other"] as const,
+    }).notNull(),
+    taskClass: text("taskClass", {
+      enum: [
+        "text_generation",
+        "reasoning",
+        "image_diffusion",
+        "video_generation",
+        "audio_asr",
+        "classification",
+        "detection",
+        "translation",
+        "agentic_workflow",
+        "code_swe_task",
+      ] as const,
+    }).notNull(),
+    energyUnit: text("energyUnit", {
+      enum: [
+        "wh_per_inference",
+        "wh_per_image",
+        "wh_per_video_second",
+        "wh_per_coding_task",
+      ] as const,
+    }).notNull(),
 
     // Measurements
-    energyWh: double("energyWh"),
-    energyWhMin: double("energyWhMin"),
-    energyWhMax: double("energyWhMax"),
-    carbonGCO2e: double("carbonGCO2e"),
-    waterMl: double("waterMl"),
+    energyWh: real("energyWh"),
+    energyWhMin: real("energyWhMin"),
+    energyWhMax: real("energyWhMax"),
+    carbonGCO2e: real("carbonGCO2e"),
+    waterMl: real("waterMl"),
 
-    // Mālama AICo2 Methodology audit fields (Phase 3b)
-    // Records WHICH τ / F / PUE / grid intensity / WUE were applied to
-    // derive this row's numbers, per Section 8.1 of the methodology.
-    // Null when the row's energy came from a third-party measurement
-    // and AICo2 was only used downstream for carbon/water conversion.
-    tauApplied: double("tauApplied"),
-    fApplied: double("fApplied"),
-    pueApplied: double("pueApplied"),
-    gridIntensityGCO2ePerKWh: double("gridIntensityGCO2ePerKWh"),
-    wueLPerKWh: double("wueLPerKWh"),
-    facilityClass: mysqlEnum("facilityClass", [
-      "hyperscale_modern",
-      "hyperscale_standard",
-      "enterprise",
-      "legacy",
-      "unknown",
-    ]),
-    hardwareClass: varchar("hardwareClass", { length: 64 }),
-    methodologyVersion: varchar("methodologyVersion", { length: 64 }),
+    // Mālama AICo2 audit fields (Phase 3b)
+    tauApplied: real("tauApplied"),
+    fApplied: real("fApplied"),
+    pueApplied: real("pueApplied"),
+    gridIntensityGCO2ePerKWh: real("gridIntensityGCO2ePerKWh"),
+    wueLPerKWh: real("wueLPerKWh"),
+    facilityClass: text("facilityClass", {
+      enum: ["hyperscale_modern", "hyperscale_standard", "enterprise", "legacy", "unknown"] as const,
+    }),
+    hardwareClass: text("hardwareClass"),
+    methodologyVersion: text("methodologyVersion"),
 
-    // Confidence intervals (per methodology Section 4.2 — Monte Carlo P10/P90).
-    // v1 ships with single-point estimates; v1.1 fills the P10/P90 columns.
-    energyWhP10: double("energyWhP10"),
-    energyWhP90: double("energyWhP90"),
-    carbonGCO2eP10: double("carbonGCO2eP10"),
-    carbonGCO2eP90: double("carbonGCO2eP90"),
-    waterMlP10: double("waterMlP10"),
-    waterMlP90: double("waterMlP90"),
+    // Monte Carlo P10/P90 (schema-only for v1; populated in v1.1)
+    energyWhP10: real("energyWhP10"),
+    energyWhP90: real("energyWhP90"),
+    carbonGCO2eP10: real("carbonGCO2eP10"),
+    carbonGCO2eP90: real("carbonGCO2eP90"),
+    waterMlP10: real("waterMlP10"),
+    waterMlP90: real("waterMlP90"),
 
     // Provenance (required)
-    classification: mysqlEnum("classification", ["measured", "derived", "estimated"]).notNull(),
-    confidence: mysqlEnum("confidence", ["high", "medium", "medium-low", "low"]).notNull(),
-    sourceName: varchar("sourceName", { length: 255 }).notNull(),
+    classification: text("classification", {
+      enum: ["measured", "derived", "estimated"] as const,
+    }).notNull(),
+    confidence: text("confidence", {
+      enum: ["high", "medium", "medium-low", "low"] as const,
+    }).notNull(),
+    sourceName: text("sourceName").notNull(),
     sourceUrl: text("sourceUrl").notNull(),
     sourceCitation: text("sourceCitation"),
-    measurementDate: timestamp("measurementDate").notNull(),
-    ingestedAt: timestamp("ingestedAt").defaultNow().notNull(),
-    lastVerifiedAt: timestamp("lastVerifiedAt").defaultNow().notNull(),
+    measurementDate: integer("measurementDate", { mode: "timestamp" }).notNull(),
+    ingestedAt: integer("ingestedAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    lastVerifiedAt: integer("lastVerifiedAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
 
     // Conditions
-    hardware: varchar("hardware", { length: 128 }),
-    softwareVersion: varchar("softwareVersion", { length: 128 }),
-    contextLength: int("contextLength"),
-    batchSize: int("batchSize"),
-    promptClass: mysqlEnum("promptClass", [
-      "single_turn_chat",
-      "long_context",
-      "tool_use",
-      "rag",
-      "multi_turn",
-    ]),
-    trainingOrInference: mysqlEnum("trainingOrInference", ["inference", "training", "both"])
+    hardware: text("hardware"),
+    softwareVersion: text("softwareVersion"),
+    contextLength: integer("contextLength"),
+    batchSize: integer("batchSize"),
+    promptClass: text("promptClass", {
+      enum: ["single_turn_chat", "long_context", "tool_use", "rag", "multi_turn"] as const,
+    }),
+    trainingOrInference: text("trainingOrInference", {
+      enum: ["inference", "training", "both"] as const,
+    })
       .default("inference")
       .notNull(),
-    standardizedConditions: json("standardizedConditions"),
+    standardizedConditions: text("standardizedConditions", { mode: "json" }).$type<
+      Record<string, unknown>
+    >(),
 
-    // Ranking (ingested from BenchLM, never computed)
-    compositeRank: int("compositeRank"),
-    inTop20: boolean("inTop20").default(false).notNull(),
+    // Ranking (ingested from BenchLM)
+    compositeRank: integer("compositeRank"),
+    inTop20: integer("inTop20", { mode: "boolean" }).default(false).notNull(),
 
     // Code-specific
-    scaffold: varchar("scaffold", { length: 128 }),
-    sweVerified: double("sweVerified"),
-    swePro: double("swePro"),
+    scaffold: text("scaffold"),
+    sweVerified: real("sweVerified"),
+    swePro: real("swePro"),
 
     // Lifecycle
-    status: mysqlEnum("status", ["active", "sunsetting", "deprecated"]).default("active").notNull(),
-    statusNote: varchar("statusNote", { length: 255 }),
+    status: text("status", {
+      enum: ["active", "sunsetting", "deprecated"] as const,
+    })
+      .default("active")
+      .notNull(),
+    statusNote: text("statusNote"),
 
     // Notes
-    utilityScore: varchar("utilityScore", { length: 255 }),
+    utilityScore: text("utilityScore"),
     notes: text("notes"),
 
-    // Source-fingerprint for dedupe across (model, source, measurementDate)
-    sourceFingerprint: varchar("sourceFingerprint", { length: 128 }).notNull(),
+    // Dedup + promotion
+    sourceFingerprint: text("sourceFingerprint").notNull(),
+    promotedAt: integer("promotedAt", { mode: "timestamp" }),
+    sanityDocId: text("sanityDocId"),
 
-    // Promotion to Sanity
-    promotedAt: timestamp("promotedAt"),
-    sanityDocId: varchar("sanityDocId", { length: 64 }),
-
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    updatedAt: integer("updatedAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (t) => ({
     modelNameIdx: index("idx_mer_modelName").on(t.modelName),
@@ -226,26 +277,31 @@ export const modelEnergyRecords = mysqlTable(
 export type ModelEnergyRecord = typeof modelEnergyRecords.$inferSelect;
 export type InsertModelEnergyRecord = typeof modelEnergyRecords.$inferInsert;
 
-/**
- * pending_updates — diffs from ingestion that need human review before
- * the corresponding model_energy_records row is updated and promoted.
- */
-export const pendingUpdates = mysqlTable(
+export const pendingUpdates = sqliteTable(
   "pending_updates",
   {
-    id: int("id").autoincrement().primaryKey(),
-    sourceFingerprint: varchar("sourceFingerprint", { length: 128 }).notNull(),
-    targetRecordId: int("targetRecordId"),
-    adapter: varchar("adapter", { length: 64 }).notNull(),
-    proposed: json("proposed").notNull(),
-    current: json("current"),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    sourceFingerprint: text("sourceFingerprint").notNull(),
+    targetRecordId: integer("targetRecordId"),
+    adapter: text("adapter").notNull(),
+    proposed: text("proposed", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    current: text("current", { mode: "json" }).$type<Record<string, unknown> | null>(),
     diffSummary: text("diffSummary"),
-    status: mysqlEnum("status", ["pending", "accepted", "rejected"]).default("pending").notNull(),
-    reviewedBy: varchar("reviewedBy", { length: 320 }),
-    reviewedAt: timestamp("reviewedAt"),
+    status: text("status", {
+      enum: ["pending", "accepted", "rejected"] as const,
+    })
+      .default("pending")
+      .notNull(),
+    reviewedBy: text("reviewedBy"),
+    reviewedAt: integer("reviewedAt", { mode: "timestamp" }),
     reviewNotes: text("reviewNotes"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    updatedAt: integer("updatedAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (t) => ({
     statusIdx: index("idx_pu_status").on(t.status),
@@ -256,23 +312,26 @@ export const pendingUpdates = mysqlTable(
 export type PendingUpdate = typeof pendingUpdates.$inferSelect;
 export type InsertPendingUpdate = typeof pendingUpdates.$inferInsert;
 
-/**
- * ingestion_runs — audit trail for every adapter execution.
- */
-export const ingestionRuns = mysqlTable(
+export const ingestionRuns = sqliteTable(
   "ingestion_runs",
   {
-    id: int("id").autoincrement().primaryKey(),
-    adapter: varchar("adapter", { length: 64 }).notNull(),
-    startedAt: timestamp("startedAt").defaultNow().notNull(),
-    finishedAt: timestamp("finishedAt"),
-    status: mysqlEnum("status", ["running", "succeeded", "failed", "partial"])
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    adapter: text("adapter").notNull(),
+    startedAt: integer("startedAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    finishedAt: integer("finishedAt", { mode: "timestamp" }),
+    status: text("status", {
+      enum: ["running", "succeeded", "failed", "partial"] as const,
+    })
       .default("running")
       .notNull(),
-    summary: json("summary"),
+    summary: text("summary", { mode: "json" }).$type<Record<string, unknown>>(),
     errors: text("errors"),
-    consecutiveFailures: int("consecutiveFailures").default(0).notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    consecutiveFailures: integer("consecutiveFailures").default(0).notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
   },
   (t) => ({
     adapterIdx: index("idx_ir_adapter").on(t.adapter),
@@ -283,22 +342,23 @@ export const ingestionRuns = mysqlTable(
 export type IngestionRun = typeof ingestionRuns.$inferSelect;
 export type InsertIngestionRun = typeof ingestionRuns.$inferInsert;
 
-/**
- * ranking_runs — audit trail for every BenchLM (or alternative) ranking
- * ingestion. We do not compute the ranking ourselves; this table simply
- * records what was pulled and which rows were updated as a result.
- */
-export const rankingRuns = mysqlTable(
+export const rankingRuns = sqliteTable(
   "ranking_runs",
   {
-    id: int("id").autoincrement().primaryKey(),
-    source: varchar("source", { length: 64 }).notNull(),
-    category: mysqlEnum("category", ["text", "image", "video", "code", "audio", "other"]).notNull(),
-    pulledAt: timestamp("pulledAt").defaultNow().notNull(),
-    rawPayloadHash: varchar("rawPayloadHash", { length: 128 }).notNull(),
-    appliedChanges: json("appliedChanges"),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    source: text("source").notNull(),
+    category: text("category", {
+      enum: ["text", "image", "video", "code", "audio", "other"] as const,
+    }).notNull(),
+    pulledAt: integer("pulledAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    rawPayloadHash: text("rawPayloadHash").notNull(),
+    appliedChanges: text("appliedChanges", { mode: "json" }).$type<Record<string, unknown>>(),
     notes: text("notes"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
   },
   (t) => ({
     sourceCategoryIdx: index("idx_rr_source_category").on(t.source, t.category),
