@@ -6,8 +6,6 @@
 dist/
 build/
 *.dist
-# Vercel function bundle (built from server/vercel-handler.ts)
-api/index.js
 
 # Environment variables
 .env
