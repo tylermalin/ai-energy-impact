@@ -12,13 +12,15 @@
  * The Vercel Turso integration injects both env vars automatically.
  */
 
-import { createClient, type Client } from "@libsql/client";
+import { createClient } from "@libsql/client";
 import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 
-let _client: Client | null = null;
+type LibSqlClient = ReturnType<typeof createClient>;
+
+let _client: LibSqlClient | null = null;
 let _db: LibSQLDatabase | null = null;
 
-export function getDbClient(): Client {
+export function getDbClient(): LibSqlClient {
   if (_client) return _client;
   const url = process.env.DATABASE_URL ?? process.env.TURSO_DATABASE_URL;
   if (!url) {
