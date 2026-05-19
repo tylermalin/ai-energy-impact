@@ -3,7 +3,7 @@
  * Navbar: Persistent top navigation with luminous border bottom
  */
 import { useState } from "react";
-import { Zap, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const NAV_ITEMS = [
@@ -28,9 +28,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-teal to-teal-dim flex items-center justify-center shadow-lg shadow-teal/20 group-hover:shadow-teal/40 transition-shadow">
-              <Zap className="w-5 h-5 text-[#0B1120]" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="AI Power"
+              className="h-9 w-auto group-hover:opacity-90 transition-opacity"
+            />
             <div className="hidden sm:block">
               <span className="font-display font-bold text-base text-white tracking-tight">
                 AI Energy Impact

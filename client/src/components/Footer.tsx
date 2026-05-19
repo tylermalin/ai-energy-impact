@@ -3,7 +3,7 @@
  * Footer: Minimal observatory-style footer
  * Accepts optional siteSettings from Sanity CMS for dynamic tagline
  */
-import { Zap, FileDown } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { AICO2_METHODOLOGY_URL } from "@/lib/data";
 
 interface SiteSettings {
@@ -25,13 +25,23 @@ export default function Footer({ siteSettings }: FooterProps) {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal to-teal-dim flex items-center justify-center">
-                <Zap className="w-4 h-4 text-[#0B1120]" />
-              </div>
+              <img src="/logo.png" alt="AI Power" className="h-8 w-auto" />
               <span className="font-display font-bold text-sm text-white">AI Energy Impact</span>
             </div>
-            <p className="text-xs text-white/40 leading-relaxed max-w-xs">
+            <p className="text-xs text-white/40 leading-relaxed max-w-xs mb-3">
               Comprehensive analysis of AI model energy consumption, carbon emissions, and water usage. Data compiled from peer-reviewed research and industry reports.
+            </p>
+            <p className="text-[11px] text-white/30 leading-relaxed max-w-xs">
+              A project of the{" "}
+              <a
+                href="https://malamafoundation.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal/70 hover:text-teal transition-colors underline underline-offset-2"
+              >
+                Mālama Foundation
+              </a>
+              {" "}— a nonprofit advancing transparent environmental measurement for emerging technologies.
             </p>
           </div>
 
@@ -82,10 +92,20 @@ export default function Footer({ siteSettings }: FooterProps) {
 
         <div className="mt-10 pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-[11px] text-white/25">
-            {siteSettings?.footerTagline || "2025 AI Energy & Environmental Impact Dashboard. Research data compiled for educational purposes."}
+            {siteSettings?.footerTagline || "© 2026 AI Energy & Environmental Impact Dashboard · A project of the "}
+            {!siteSettings?.footerTagline && (
+              <a
+                href="https://malamafoundation.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/40 hover:text-teal transition-colors"
+              >
+                Mālama Foundation
+              </a>
+            )}
           </p>
           <p className="text-[11px] text-white/25 font-data">
-            v2.0 — 30 models · 20+ sources · Full methodology
+            Live data · Mālama AICo2 methodology
           </p>
         </div>
       </div>
