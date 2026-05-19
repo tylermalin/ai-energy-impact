@@ -10,7 +10,12 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "db:backfill": "tsx scripts/backfill-existing.ts",
+    "db:seed-top20": "tsx scripts/seed-top20.ts",
+    "db:verify": "tsx scripts/verify-provenance.ts",
+    "ingest": "tsx scripts/ingest-once.ts",
+    "aico2:apply": "tsx scripts/apply-aico2.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -78,6 +83,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
     "wouter": "^3.3.5",
+    "yaml": "^2.9.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

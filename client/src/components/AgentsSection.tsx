@@ -93,7 +93,7 @@ const PIPELINE_STEPS = [
   },
   {
     icon: BarChart3,
-    title: "AI-Powered Analysis",
+    title: "Automated Analysis",
     description: "Machine learning models analyze sensor data to identify inefficiencies, predict failures, and recommend optimizations.",
   },
   {
@@ -347,7 +347,7 @@ export default function AgentsSection() {
                   "Live grid carbon intensity from Electricity Maps / sensors",
                   "Flow sensors on cooling systems measuring actual water use",
                   "Blockchain-verified, tamper-proof measurement records",
-                  "AI-powered dynamic optimization reducing impact in real-time",
+                  "Automated dynamic optimization reducing impact in real-time",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-white/40 leading-relaxed">
                     <span className="text-teal/80 mt-0.5">✓</span>
@@ -456,7 +456,7 @@ export default function AgentsSection() {
                   The Malama dMRV (digital Measurement, Reporting, and Verification) infrastructure — already proven in carbon credit verification for agriculture and land management — provides the technological foundation for trusted data center monitoring.
                 </p>
                 <p>
-                  By combining <span className="text-teal font-medium">IoT sensors</span> for real-time environmental data collection, <span className="text-teal font-medium">AI-powered analysis</span> for pattern recognition and optimization, and <span className="text-teal font-medium">blockchain verification</span> (Cardano) for tamper-proof audit trails, the platform creates an environment where environmental claims are backed by verifiable, objective measurements — not self-reported estimates.
+                  By combining <span className="text-teal font-medium">IoT sensors</span> for real-time environmental data collection, <span className="text-teal font-medium">machine learning analysis</span> for pattern recognition and optimization, and <span className="text-teal font-medium">blockchain verification</span> (Cardano) for tamper-proof audit trails, the platform creates an environment where environmental claims are backed by verifiable, objective measurements — not self-reported estimates.
                 </p>
                 <p>
                   Extending this infrastructure into data centers means every energy reading, every water flow measurement, and every carbon calculation is recorded immutably on-chain. Operators, regulators, and the public can independently verify environmental impact claims, creating the accountability that the FAS, CMU, and industry researchers have called for.

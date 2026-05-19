@@ -3,10 +3,13 @@
  * Hero: Cinematic hero with observatory background, animated counters, and key insight
  * Now accepts optional siteSettings from Sanity CMS for dynamic text/CTAs
  */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Zap, Flame, Droplets, Activity, FileDown } from "lucide-react";
 import { AICO2_METHODOLOGY_URL } from "@/lib/data";
+import { trpc } from "@/lib/trpc";
+import { adaptDbRow, type DbRow } from "@/lib/dbModelsAdapter";
+import { ADAPTED_MODELS } from "@/lib/modelsAdapter";
 
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310419663031887970/RntCY6FmRCfuLPXHtAP4Lb/hero-bg-T997qbZ6qBkA2tumzqH7yt.webp";
 
@@ -35,11 +38,16 @@ function AnimatedCounter({ end, suffix = "", decimals = 0, duration = 2000 }: { 
   );
 }
 
-const stats = [
+/**
+ * Default stat tiles, used as the static fallback when the DB query is
+ * loading / unavailable. The HeroSection component below replaces these
+ * with live numbers from cms.modelsForDashboard whenever data is available.
+ */
+const DEFAULT_STATS = [
   { icon: Activity, label: "Models Analyzed", value: 30, suffix: "", decimals: 0, color: "text-teal" },
   { icon: Zap, label: "Max Energy / Prompt", value: 944.44, suffix: " Wh", decimals: 0, color: "text-amber" },
   { icon: Flame, label: "Max Carbon / Prompt", value: 380, suffix: " g", decimals: 0, color: "text-signal-red" },
-  { icon: Droplets, label: "Max Water / Prompt", value: 1000, suffix: " mL", decimals: 0, color: "text-cyan-400" },
+  { icon: Droplets, label: "Max Water / Prompt*", value: 1000, suffix: " mL", decimals: 0, color: "text-cyan-400" },
 ];
 
 /** Defaults used when Sanity data hasn't loaded yet or fields are empty */
@@ -81,6 +89,30 @@ export default function HeroSection({ siteSettings }: HeroSectionProps) {
   const ctaAgentsLabel = s?.ctaAgentsLabel || DEFAULTS.ctaAgentsLabel;
   const ctaPaperLabel = s?.ctaPaperLabel || DEFAULTS.ctaPaperLabel;
   const ctaPaperUrl = s?.ctaPaperUrl || DEFAULTS.ctaPaperUrl;
+
+  // Pull live stats from MySQL; fall back to DEFAULT_STATS if unavailable.
+  const dbQuery = trpc.cms.modelsForDashboard.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    staleTime: 60_000,
+  });
+
+  const stats = useMemo(() => {
+    const dbRows = (dbQuery.data?.rows ?? []) as DbRow[];
+    const source = dbRows.length > 0 ? dbRows.map(adaptDbRow) : ADAPTED_MODELS;
+    if (source.length === 0) return DEFAULT_STATS;
+
+    const maxEnergy = Math.max(...source.map((m) => m.energyWh ?? 0), 0);
+    const maxCarbon = Math.max(...source.map((m) => m.carbonGCO2e ?? 0), 0);
+    const maxWater = Math.max(...source.map((m) => m.waterMl ?? 0), 0);
+    const total = source.length;
+
+    return [
+      { icon: Activity, label: "Models Analyzed", value: total, suffix: "", decimals: 0, color: "text-teal" },
+      { icon: Zap, label: "Max Energy / Prompt", value: maxEnergy, suffix: " Wh", decimals: maxEnergy < 10 ? 1 : 0, color: "text-amber" },
+      { icon: Flame, label: "Max Carbon / Prompt", value: maxCarbon, suffix: " g", decimals: maxCarbon < 10 ? 1 : 0, color: "text-signal-red" },
+      { icon: Droplets, label: "Max Water / Prompt*", value: maxWater, suffix: " mL", decimals: 0, color: "text-cyan-400" },
+    ];
+  }, [dbQuery.data]);
 
   return (
     <section className="relative min-h-[85vh] flex items-center overflow-hidden">
@@ -176,6 +208,9 @@ export default function HeroSection({ siteSettings }: HeroSectionProps) {
                 </div>
               </motion.div>
             ))}
+            <p className="col-span-2 text-[10px] text-white/35 font-light leading-relaxed mt-1">
+              * Water estimate is low-confidence; reported range is 200–1,000 mL per video prompt. See methodology.
+            </p>
           </motion.div>
         </div>
       </div>

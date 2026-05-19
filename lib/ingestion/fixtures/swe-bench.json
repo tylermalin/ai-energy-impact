@@ -1,0 +1,9 @@
+[
+  { "modelName": "GPT-5.5",            "vendor": "OpenAI",    "scaffold": "Codex CLI",       "sweVerified": 88.7 },
+  { "modelName": "Claude Opus 4.7",    "vendor": "Anthropic", "scaffold": "Claude Code",     "sweVerified": 87.6, "swePro": 64.3 },
+  { "modelName": "GPT-5.3-Codex",      "vendor": "OpenAI",    "scaffold": "Codex CLI",       "sweVerified": 85.0, "swePro": 56.8 },
+  { "modelName": "Claude Opus 4.6",    "vendor": "Anthropic", "scaffold": "Claude Code",     "sweVerified": 80.8, "swePro": 51.9 },
+  { "modelName": "DeepSeek V4 Pro Max","vendor": "DeepSeek",  "scaffold": "open",            "sweVerified": 80.6, "openWeight": true },
+  { "modelName": "Gemini 3.1 Pro",     "vendor": "Google",    "scaffold": "TongAgents",      "sweVerified": 80.6 },
+  { "modelName": "Kimi K2.6",          "vendor": "Moonshot",  "scaffold": "open",            "sweVerified": 80.2, "openWeight": true }
+]

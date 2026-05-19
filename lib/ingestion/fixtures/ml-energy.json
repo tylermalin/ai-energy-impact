@@ -1,0 +1,7 @@
+[
+  { "modelName": "Llama 3.1 70B",      "vendor": "Meta",        "category": "text",  "energyWh": 17.23, "energyWhMin": 0.86, "energyWhMax": 33.6, "carbonGCO2e": 2.04, "hardware": "NVIDIA H100", "batchSize": 1 },
+  { "modelName": "Llama 3.1 405B",     "vendor": "Meta",        "category": "text",  "energyWh": 1.145, "energyWhMin": 0.43, "energyWhMax": 1.86, "hardware": "NVIDIA H100", "batchSize": 1 },
+  { "modelName": "Stable Diffusion 3 / Medium", "vendor": "Stability AI", "category": "image", "energyWh": 0.7685, "energyWhMin": 0.317, "energyWhMax": 1.22, "carbonGCO2e": 0.36, "waterMl": 2.0, "hardware": "NVIDIA H100", "batchSize": 1 },
+  { "modelName": "CogVideoX (5s Clip)","vendor": "Zhipu AI",    "category": "video", "energyWh": 487.355, "energyWhMin": 30.27, "energyWhMax": 944.44, "carbonGCO2e": 380.0, "waterMl": 1000.0, "hardware": "NVIDIA H100", "batchSize": 1 },
+  { "modelName": "LTX-Video",          "vendor": "Lightricks",  "category": "video", "energyWh": 0.0005, "hardware": "NVIDIA H100", "batchSize": 1 }
+]

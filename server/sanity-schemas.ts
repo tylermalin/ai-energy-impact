@@ -58,23 +58,13 @@ export interface BlogPost {
 }
 
 // --- AI Model ---
-export interface SanityAIModel {
-  _id: string;
-  _type: "aiModel";
-  _createdAt: string;
-  _updatedAt: string;
-  task: string;
-  model: string;
-  size: string;
-  energy: string;
-  carbon: string;
-  water: string;
-  utility: string;
-  source: string;
-  category: "text" | "image" | "video" | "audio" | "other";
-  notes?: string;
-  active: boolean;
-}
+// PHASE 3b NOTE: aiModel data is no longer canonical in Sanity. The
+// MySQL `model_energy_records` table is now the source of truth — see
+// lib/dashboard/models.ts. The dashboard reads via the tRPC query
+// `cms.modelsForDashboard`, not from Sanity.
+//
+// The type definitions below were removed in Phase 3b's Sanity cleanup
+// (Path B). Use `ModelEnergyRecord` from drizzle/schema.ts instead.
 
 // --- Team Member ---
 export interface TeamMember {
@@ -140,10 +130,9 @@ export const QUERIES = {
     "coverImageUrl": coverImage.asset->url
   }`,
 
-  // AI Models
-  allModels: `*[_type == "aiModel" && active == true] | order(category asc, model asc) {
-    _id, task, model, size, energy, carbon, water, utility, source, category, notes
-  }`,
+  // NOTE: allModels / modelsByCategory GROQ queries removed in Phase 3b.
+  // AI model data now lives in MySQL (model_energy_records) and is
+  // served via cms.modelsForDashboard.
 
   // Team
   allTeamMembers: `*[_type == "teamMember"] | order(order asc) {

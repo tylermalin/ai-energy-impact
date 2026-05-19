@@ -1,0 +1,8 @@
+[
+  { "modelName": "Llama 3.1 8B",        "vendor": "Meta",        "category": "text",  "energyWh": 0.128, "energyWhMin": 0.016, "energyWhMax": 0.24,  "hardware": "NVIDIA H100", "contextLength": 8192,  "batchSize": 1 },
+  { "modelName": "Mixtral 8x22B",       "vendor": "Mistral",     "category": "text",  "energyWh": 0.07,                                          "hardware": "NVIDIA H100", "contextLength": 32768, "batchSize": 1 },
+  { "modelName": "InternLM2.5-7B-Chat", "vendor": "Shanghai AI Lab", "category": "text", "energyWh": 2.23,                                       "hardware": "NVIDIA H100", "contextLength": 8192,  "batchSize": 1 },
+  { "modelName": "Qwen2-72B-Instruct",  "vendor": "Alibaba",     "category": "text",  "energyWh": 9.865, "energyWhMin": 9.86,  "energyWhMax": 9.87, "hardware": "NVIDIA H100", "contextLength": 8192,  "batchSize": 1 },
+  { "modelName": "Stable Diffusion 3",  "vendor": "Stability AI","category": "image", "energyWh": 0.7685,"energyWhMin": 0.317, "energyWhMax": 1.22, "hardware": "NVIDIA H100", "batchSize": 1 },
+  { "modelName": "EVA02 Large",         "vendor": "Open-source", "category": "image", "energyWh": 1.53,                                          "hardware": "NVIDIA H100", "batchSize": 1 }
+]

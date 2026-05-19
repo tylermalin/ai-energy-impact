@@ -217,6 +217,9 @@ export default function MethodologySection() {
           <p className="text-white/50 max-w-3xl leading-relaxed mb-5">
             We believe in radical transparency. Every number on this dashboard has a source, every calculation has an assumption, and every assumption has a known limitation. This section documents our methodology so you can evaluate, challenge, and improve it.
           </p>
+          <p className="text-white/55 max-w-3xl leading-relaxed mb-5 border-l-2 border-teal/30 pl-4">
+            <span className="text-white/70 font-medium">Inference vs. training.</span> This dashboard tracks per-inference energy. Training a frontier model can consume thousands of megawatt-hours before a single user prompt is served. Total AI footprint is the sum of training, fine-tuning, idle capacity, and inference. We focus on inference because it is the metric most directly tied to end-user activity, but readers should treat it as one component of a larger system.
+          </p>
           <a
             href={AICO2_METHODOLOGY_URL}
             target="_blank"

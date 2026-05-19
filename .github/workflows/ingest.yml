@@ -1,0 +1,68 @@
+# .github/workflows/ingest.yml
+#
+# Daily cron that POSTs to /api/ingest/run on the deployed aipower.fyi
+# instance. Ships DISABLED by default — flip the `vars.INGEST_ENABLED`
+# repo variable to "true" and add the two secrets below to activate.
+#
+# Required repository secrets:
+#   INGEST_URL         — full URL, e.g. https://aipower.fyi/api/ingest/run
+#   ADMIN_KEY          — must match the ADMIN_KEY env var on the server
+#
+# Required repository variables:
+#   INGEST_ENABLED     — set to "true" to actually fire the cron
+#
+# Manual trigger: use the "Run workflow" button on the Actions tab. The
+# workflow_dispatch path bypasses the INGEST_ENABLED gate so you can
+# test before flipping it on.
+
+name: Ingestion cron
+
+on:
+  schedule:
+    # Daily at 06:00 UTC.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run-ingest:
+    name: POST /api/ingest/run
+    runs-on: ubuntu-latest
+    # Gate the scheduled runs behind a repo variable so the workflow
+    # is inert until explicitly enabled. workflow_dispatch is always
+    # allowed (so you can test).
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.INGEST_ENABLED == 'true' }}
+    steps:
+      - name: Verify required secrets are present
+        env:
+          INGEST_URL: ${{ secrets.INGEST_URL }}
+          ADMIN_KEY: ${{ secrets.ADMIN_KEY }}
+        run: |
+          if [ -z "$INGEST_URL" ]; then
+            echo "::error::INGEST_URL secret not set."
+            exit 1
+          fi
+          if [ -z "$ADMIN_KEY" ]; then
+            echo "::error::ADMIN_KEY secret not set."
+            exit 1
+          fi
+
+      - name: POST /api/ingest/run
+        env:
+          INGEST_URL: ${{ secrets.INGEST_URL }}
+          ADMIN_KEY: ${{ secrets.ADMIN_KEY }}
+        run: |
+          HTTP_STATUS=$(curl -sS -o /tmp/response.json -w "%{http_code}" \
+            -X POST "$INGEST_URL" \
+            -H "X-Admin-Key: $ADMIN_KEY" \
+            -H "Content-Type: application/json")
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Response:"
+          cat /tmp/response.json | head -200
+          echo
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::Ingestion run returned non-200 status."
+            exit 1
+          fi

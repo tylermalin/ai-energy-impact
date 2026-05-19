@@ -9,6 +9,8 @@ import { lazy, Suspense } from "react";
 
 const SensorsDemo = lazy(() => import("./pages/SensorsDemo"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminPending = lazy(() => import("./pages/AdminPending"));
+const AdminIngestion = lazy(() => import("./pages/AdminIngestion"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const About = lazy(() => import("./pages/About"));
@@ -51,6 +53,16 @@ function Router() {
       <Route path={"/admin"}>
         <Suspense fallback={<LoadingFallback />}>
           <Admin />
+        </Suspense>
+      </Route>
+      <Route path={"/admin/pending"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <AdminPending />
+        </Suspense>
+      </Route>
+      <Route path={"/admin/ingestion"}>
+        <Suspense fallback={<LoadingFallback />}>
+          <AdminIngestion />
         </Suspense>
       </Route>
       <Route path={"/404"} component={NotFound} />

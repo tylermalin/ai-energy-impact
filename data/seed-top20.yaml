@@ -1,0 +1,96 @@
+# data/seed-top20.yaml
+# Seed list for Top 20 per category, as of May 2026.
+# compositeRank will be recomputed after first ingestion run.
+# All energy values intentionally left blank — populated by adapters.
+
+text:
+  # `taskClass` defaults to text_generation. Set to "reasoning" for o-class /
+  # thinking models — applies τ=24 in the AICo2 estimator (Section 5.1).
+  - { rank: 1,  modelName: "GPT-5.5",                  vendor: "OpenAI",     openWeight: false }
+  - { rank: 2,  modelName: "Claude Opus 4.7",          vendor: "Anthropic",  openWeight: false }
+  - { rank: 3,  modelName: "Claude Opus 4.6 Thinking", vendor: "Anthropic",  openWeight: false, taskClass: "reasoning" }
+  - { rank: 4,  modelName: "Gemini 3.1 Pro",           vendor: "Google",     openWeight: false }
+  - { rank: 5,  modelName: "Grok 4",                   vendor: "xAI",        openWeight: false }
+  - { rank: 6,  modelName: "Claude Mythos Preview",    vendor: "Anthropic",  openWeight: false }
+  - { rank: 7,  modelName: "DeepSeek V4 Pro Max",      vendor: "DeepSeek",   openWeight: true  }
+  - { rank: 8,  modelName: "Kimi K2.6",                vendor: "Moonshot",   openWeight: true  }
+  - { rank: 9,  modelName: "Claude Sonnet 4.6",        vendor: "Anthropic",  openWeight: false }
+  - { rank: 10, modelName: "GPT-5.3",                  vendor: "OpenAI",     openWeight: false }
+  - { rank: 11, modelName: "GLM-5",                    vendor: "Zhipu AI",   openWeight: true  }
+  - { rank: 12, modelName: "Llama 4 Scout",            vendor: "Meta",       openWeight: true  }
+  - { rank: 13, modelName: "Qwen 3.6 Plus",            vendor: "Alibaba",    openWeight: true  }
+  - { rank: 14, modelName: "Mistral Medium 3.5",       vendor: "Mistral",    openWeight: true  }
+  - { rank: 15, modelName: "MiniMax M2.5",             vendor: "MiniMax",    openWeight: true  }
+  - { rank: 16, modelName: "DeepSeek V3.2",            vendor: "DeepSeek",   openWeight: true  }
+  - { rank: 17, modelName: "GPT-4.1",                  vendor: "OpenAI",     openWeight: false }
+  - { rank: 18, modelName: "Llama 3.1 405B",           vendor: "Meta",       openWeight: true  }
+  - { rank: 19, modelName: "OLMo 3.1",                 vendor: "Allen AI",   openWeight: true  }
+  - { rank: 20, modelName: "Qwen 3.5 0.8B",            vendor: "Alibaba",    openWeight: true  }
+
+image:
+  - { rank: 1,  modelName: "Midjourney V8",                  vendor: "Midjourney",         openWeight: false }
+  - { rank: 2,  modelName: "Flux 2 Pro",                     vendor: "Black Forest Labs",  openWeight: false }
+  - { rank: 3,  modelName: "Imagen 4",                       vendor: "Google",             openWeight: false }
+  - { rank: 4,  modelName: "Gemini 3.1 Flash Image",         vendor: "Google",             openWeight: false }
+  - { rank: 5,  modelName: "GPT Image 2",                    vendor: "OpenAI",             openWeight: false }
+  - { rank: 6,  modelName: "Flux 1.1 Pro Ultra",             vendor: "Black Forest Labs",  openWeight: false }
+  - { rank: 7,  modelName: "Stable Diffusion 4",             vendor: "Stability AI",       openWeight: true  }
+  - { rank: 8,  modelName: "Ideogram 3",                     vendor: "Ideogram",           openWeight: false }
+  - { rank: 9,  modelName: "Adobe Firefly 3",                vendor: "Adobe",              openWeight: false }
+  - { rank: 10, modelName: "Recraft V4",                     vendor: "Recraft",            openWeight: false }
+  - { rank: 11, modelName: "Flux 2 Klein",                   vendor: "Black Forest Labs",  openWeight: true  }
+  - { rank: 12, modelName: "Stable Diffusion 3.5",           vendor: "Stability AI",       openWeight: true  }
+  - { rank: 13, modelName: "Seedream 3.0",                   vendor: "ByteDance",          openWeight: false }
+  - { rank: 14, modelName: "Leonardo Phoenix",               vendor: "Leonardo AI",        openWeight: false }
+  - { rank: 15, modelName: "Z-Image Turbo",                  vendor: "Z.AI",               openWeight: false }
+  - { rank: 16, modelName: "Aurora",                         vendor: "xAI",                openWeight: false }
+  - { rank: 17, modelName: "DALL-E 3.5",                     vendor: "OpenAI",             openWeight: false }
+  - { rank: 18, modelName: "HiDream",                        vendor: "HiDream",            openWeight: true  }
+  - { rank: 19, modelName: "Playground v3",                  vendor: "Playground",         openWeight: false }
+  - { rank: 20, modelName: "Kandinsky 4",                    vendor: "Sber AI",            openWeight: true  }
+
+video:
+  - { rank: 1,  modelName: "Veo 3.1",          vendor: "Google",      openWeight: false, status: "active" }
+  - { rank: 2,  modelName: "Kling 3.0",        vendor: "Kuaishou",    openWeight: false, status: "active" }
+  - { rank: 3,  modelName: "Seedance 2.0",     vendor: "ByteDance",   openWeight: false, status: "active" }
+  - { rank: 4,  modelName: "Runway Gen-4.5",   vendor: "Runway",      openWeight: false, status: "active" }
+  - { rank: 5,  modelName: "Sora 2",           vendor: "OpenAI",      openWeight: false, status: "sunsetting-2026-09-24" }
+  - { rank: 6,  modelName: "Pika 2.5",         vendor: "Pika Labs",   openWeight: false, status: "active" }
+  - { rank: 7,  modelName: "Luma Ray3",        vendor: "Luma AI",     openWeight: false, status: "active" }
+  - { rank: 8,  modelName: "Wan 2.6",          vendor: "Alibaba",     openWeight: true,  status: "active" }
+  - { rank: 9,  modelName: "LTX-2",            vendor: "Lightricks",  openWeight: true,  status: "active" }
+  - { rank: 10, modelName: "Hailuo 2.3",       vendor: "MiniMax",     openWeight: false, status: "active" }
+  - { rank: 11, modelName: "Dream Machine",    vendor: "Luma AI",     openWeight: false, status: "active" }
+  - { rank: 12, modelName: "Hunyuan Video 1.5",vendor: "Tencent",     openWeight: true,  status: "active" }
+  - { rank: 13, modelName: "Grok Imagine",     vendor: "xAI",         openWeight: false, status: "active" }
+  - { rank: 14, modelName: "Mochi 1",          vendor: "Genmo",       openWeight: true,  status: "active" }
+  - { rank: 15, modelName: "Vidu Q3",          vendor: "Shengshu",    openWeight: false, status: "active" }
+  - { rank: 16, modelName: "CogVideoX-5B",     vendor: "Zhipu AI",    openWeight: true,  status: "active" }
+  - { rank: 17, modelName: "Pyramid Flow",     vendor: "Pyramid",     openWeight: true,  status: "active" }
+  - { rank: 18, modelName: "OpenSora 2.0",     vendor: "HPC-AI",      openWeight: true,  status: "active" }
+  - { rank: 19, modelName: "MiniMax T2V",      vendor: "MiniMax",     openWeight: false, status: "active" }
+  - { rank: 20, modelName: "Genmo",            vendor: "Genmo",       openWeight: false, status: "active" }
+
+code:
+  # Energy unit for this category is Wh per SWE-bench Verified task end-to-end,
+  # not per inference. Most rows will be derived from token-count × text-model energy.
+  - { rank: 1,  modelName: "Claude Opus 4.7",         vendor: "Anthropic", scaffold: "Claude Code",       sweVerified: 87.6, swePro: 64.3, openWeight: false }
+  - { rank: 2,  modelName: "GPT-5.5",                 vendor: "OpenAI",    scaffold: "Codex CLI",         sweVerified: 88.7, swePro: null,  openWeight: false }
+  - { rank: 3,  modelName: "GPT-5.3-Codex",           vendor: "OpenAI",    scaffold: "Codex CLI",         sweVerified: 85.0, swePro: 56.8,  openWeight: false }
+  - { rank: 4,  modelName: "Gemini 3.1 Pro",          vendor: "Google",    scaffold: "TongAgents",        sweVerified: 80.6, swePro: null,  openWeight: false }
+  - { rank: 5,  modelName: "Claude Opus 4.6",         vendor: "Anthropic", scaffold: "Claude Code",       sweVerified: 80.8, swePro: 51.9,  openWeight: false }
+  - { rank: 6,  modelName: "Claude Sonnet 4.6",       vendor: "Anthropic", scaffold: "Claude Code",       sweVerified: 79.6, swePro: null,  openWeight: false }
+  - { rank: 7,  modelName: "DeepSeek V4 Pro Max",     vendor: "DeepSeek",  scaffold: "open",              sweVerified: 80.6, swePro: null,  openWeight: true  }
+  - { rank: 8,  modelName: "Kimi K2.6",               vendor: "Moonshot",  scaffold: "open",              sweVerified: 80.2, swePro: null,  openWeight: true  }
+  - { rank: 9,  modelName: "MiniMax M2.5",            vendor: "MiniMax",   scaffold: "open",              sweVerified: 80.2, swePro: null,  openWeight: true  }
+  - { rank: 10, modelName: "Qwen3-Coder-Next",        vendor: "Alibaba",   scaffold: "open",              sweVerified: 70.6, swePro: null,  openWeight: true  }
+  - { rank: 11, modelName: "Qwen 3.6 Plus",           vendor: "Alibaba",   scaffold: "open",              sweVerified: 78.8, swePro: null,  openWeight: true  }
+  - { rank: 12, modelName: "Mistral Medium 3.5",      vendor: "Mistral",   scaffold: "open",              sweVerified: 77.6, swePro: null,  openWeight: true  }
+  - { rank: 13, modelName: "GLM-5",                   vendor: "Zhipu AI",  scaffold: "open",              sweVerified: 77.8, swePro: null,  openWeight: true  }
+  - { rank: 14, modelName: "Muse Spark",              vendor: "Meta",      scaffold: "open",              sweVerified: 77.4, swePro: 55.0,  openWeight: true  }
+  - { rank: 15, modelName: "MiMo-V2-Pro",             vendor: "Xiaomi",    scaffold: "open",              sweVerified: 78.0, swePro: null,  openWeight: true  }
+  - { rank: 16, modelName: "GLM-4.7",                 vendor: "Zhipu AI",  scaffold: "open",              sweVerified: 73.8, swePro: null,  openWeight: true  }
+  - { rank: 17, modelName: "Kimi K2.5",               vendor: "Moonshot",  scaffold: "open",              sweVerified: 76.8, swePro: null,  openWeight: true  }
+  - { rank: 18, modelName: "Cursor Background Agent", vendor: "Cursor",    scaffold: "Composer",          sweVerified: 65.7, swePro: null,  openWeight: false }
+  - { rank: 19, modelName: "Factory Droid",           vendor: "Factory",   scaffold: "Droid + GPT-5.3",   sweVerified: 77.3, swePro: null,  openWeight: false }
+  - { rank: 20, modelName: "OpenHands",               vendor: "All Hands AI", scaffold: "OpenHands",      sweVerified: 65.0, swePro: null,  openWeight: true  }

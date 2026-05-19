@@ -34,9 +34,6 @@ describe("CMS Sanity Queries", () => {
     expect(QUERIES.siteSettings).toBeDefined();
     expect(QUERIES.siteSettings).toContain('_type == "siteSettings"');
 
-    expect(QUERIES.allModels).toBeDefined();
-    expect(QUERIES.allModels).toContain('_type == "aiModel"');
-
     expect(QUERIES.featuredPosts).toBeDefined();
     expect(QUERIES.featuredPosts).toContain("featured == true");
 
@@ -91,16 +88,9 @@ describe("CMS Sanity Queries", () => {
     expect(q).toContain("socialLinks");
   });
 
-  it("should have correct field projections in allModels query", () => {
-    const q = QUERIES.allModels;
-    expect(q).toContain("task");
-    expect(q).toContain("model");
-    expect(q).toContain("energy");
-    expect(q).toContain("carbon");
-    expect(q).toContain("water");
-    expect(q).toContain("category");
-    expect(q).toContain("active == true");
-  });
+  // Note: aiModel data now reads from MySQL via cms.modelsForDashboard,
+  // not from Sanity. The allModels GROQ query was removed in Phase 3b's
+  // Sanity cleanup. See lib/dashboard/models.ts.
 
   it("should order posts by publishedAt desc", () => {
     expect(QUERIES.allPosts).toContain("order(publishedAt desc)");

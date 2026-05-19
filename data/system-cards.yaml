@@ -1,0 +1,56 @@
+# data/system-cards.yaml
+#
+# Manual entries for vendor-published system cards. The system-cards
+# ingestion adapter reads this file on every run.
+#
+# Schema per entry:
+#   modelName:           string, required
+#   vendor:              string, required (OpenAI / Anthropic / Google / Meta / xAI / etc.)
+#   category:            text | image | video | code
+#   systemCardUrl:       absolute URL to the published card
+#   publishedDate:       YYYY-MM-DD (when the card was published)
+#   reportedEnergyWh:    number | null   (set if the card publishes a per-inference Wh figure)
+#   derivationMethod:    string | null   ("pricing+throughput", "vendor-disclosed", etc.)
+#   hardwareAssumption:  string | null   ("H200", "TPU v5", "Unknown")
+#   parameters:          string | null   ("MoE-680B", "405B", "Unknown")
+#   notes:               string | null   (free-form context)
+#
+# Defaults applied by the adapter:
+#   - if reportedEnergyWh is set:  classification = "estimated", confidence = "medium-low"
+#   - if reportedEnergyWh is null: classification = "derived",   confidence = "low"
+#
+# Add new entries by appending to the list. The adapter dedupes on
+# (modelName, category, sourceName="Vendor system card", publishedDate).
+
+- modelName: "Claude Opus 4.7"
+  vendor: "Anthropic"
+  category: "text"
+  systemCardUrl: "https://www.anthropic.com/news/claude-opus-4-7"
+  publishedDate: "2026-04-15"
+  reportedEnergyWh: null
+  derivationMethod: "pricing+throughput"
+  hardwareAssumption: "H200"
+  parameters: null
+  notes: "Anthropic published the system card without per-inference energy. Derived via Artificial Analysis pricing methodology."
+
+- modelName: "GPT-5.5"
+  vendor: "OpenAI"
+  category: "text"
+  systemCardUrl: "https://openai.com/research/gpt-5-5-system-card"
+  publishedDate: "2026-03-20"
+  reportedEnergyWh: null
+  derivationMethod: "pricing+throughput"
+  hardwareAssumption: "H200"
+  parameters: null
+  notes: "No energy disclosure in the system card. Derivation pending."
+
+- modelName: "Gemini 3.1 Pro"
+  vendor: "Google"
+  category: "text"
+  systemCardUrl: "https://blog.google/technology/google-deepmind/gemini-3-1/"
+  publishedDate: "2026-02-10"
+  reportedEnergyWh: 0.18
+  derivationMethod: "vendor-disclosed"
+  hardwareAssumption: "TPU v5"
+  parameters: null
+  notes: "Google disclosed median per-prompt energy in the launch blog post; treated as 'estimated' per Phase 1 spec since the methodology is not third-party verified."

@@ -1,0 +1,25 @@
+[
+  { "category": "text", "rank": 1,  "modelName": "GPT-5.5",                  "vendor": "OpenAI",     "openWeight": false },
+  { "category": "text", "rank": 2,  "modelName": "Claude Opus 4.7",          "vendor": "Anthropic",  "openWeight": false },
+  { "category": "text", "rank": 3,  "modelName": "Claude Opus 4.6 Thinking", "vendor": "Anthropic",  "openWeight": false },
+  { "category": "text", "rank": 4,  "modelName": "Gemini 3.1 Pro",           "vendor": "Google",     "openWeight": false },
+  { "category": "text", "rank": 5,  "modelName": "Grok 4",                   "vendor": "xAI",        "openWeight": false },
+
+  { "category": "image", "rank": 1, "modelName": "Midjourney V8",            "vendor": "Midjourney",        "openWeight": false },
+  { "category": "image", "rank": 2, "modelName": "Flux 2 Pro",               "vendor": "Black Forest Labs", "openWeight": false },
+  { "category": "image", "rank": 3, "modelName": "Imagen 4",                 "vendor": "Google",            "openWeight": false },
+  { "category": "image", "rank": 4, "modelName": "Gemini 3.1 Flash Image",   "vendor": "Google",            "openWeight": false },
+  { "category": "image", "rank": 5, "modelName": "GPT Image 2",              "vendor": "OpenAI",            "openWeight": false },
+
+  { "category": "video", "rank": 1, "modelName": "Veo 3.1",                  "vendor": "Google",     "openWeight": false, "status": "active" },
+  { "category": "video", "rank": 2, "modelName": "Kling 3.0",                "vendor": "Kuaishou",   "openWeight": false, "status": "active" },
+  { "category": "video", "rank": 3, "modelName": "Seedance 2.0",             "vendor": "ByteDance",  "openWeight": false, "status": "active" },
+  { "category": "video", "rank": 4, "modelName": "Runway Gen-4.5",           "vendor": "Runway",     "openWeight": false, "status": "active" },
+  { "category": "video", "rank": 5, "modelName": "Sora 2",                   "vendor": "OpenAI",     "openWeight": false, "status": "sunsetting", "statusNote": "sunsetting 2026-09-24" },
+
+  { "category": "code", "rank": 1,  "modelName": "Claude Opus 4.7",          "vendor": "Anthropic", "openWeight": false, "scaffold": "Claude Code", "sweVerified": 87.6, "swePro": 64.3 },
+  { "category": "code", "rank": 2,  "modelName": "GPT-5.5",                  "vendor": "OpenAI",    "openWeight": false, "scaffold": "Codex CLI",   "sweVerified": 88.7 },
+  { "category": "code", "rank": 3,  "modelName": "GPT-5.3-Codex",            "vendor": "OpenAI",    "openWeight": false, "scaffold": "Codex CLI",   "sweVerified": 85.0, "swePro": 56.8 },
+  { "category": "code", "rank": 4,  "modelName": "Gemini 3.1 Pro",           "vendor": "Google",    "openWeight": false, "scaffold": "TongAgents",  "sweVerified": 80.6 },
+  { "category": "code", "rank": 5,  "modelName": "Claude Opus 4.6",          "vendor": "Anthropic", "openWeight": false, "scaffold": "Claude Code", "sweVerified": 80.8, "swePro": 51.9 }
+]

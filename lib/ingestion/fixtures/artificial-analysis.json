@@ -1,0 +1,9 @@
+[
+  { "modelName": "GPT-4o",                "vendor": "OpenAI",     "category": "text",  "pricePerUnitUsd": 5.00,  "unitsPerInference": 800,  "inferredHardware": "H100" },
+  { "modelName": "GPT-o3",                "vendor": "OpenAI",     "category": "text",  "pricePerUnitUsd": 60.00, "unitsPerInference": 2500, "inferredHardware": "H100" },
+  { "modelName": "GPT-4.5",               "vendor": "OpenAI",     "category": "text",  "pricePerUnitUsd": 75.00, "unitsPerInference": 1200, "inferredHardware": "H100" },
+  { "modelName": "Claude Opus 4.7",       "vendor": "Anthropic",  "category": "text",  "pricePerUnitUsd": 15.00, "unitsPerInference": 1500, "inferredHardware": "H200" },
+  { "modelName": "Gemini 3.1 Pro",        "vendor": "Google",     "category": "text",  "pricePerUnitUsd": 7.00,  "unitsPerInference": 1100, "inferredHardware": "TPU v5" },
+  { "modelName": "Midjourney V8",         "vendor": "Midjourney", "category": "image", "pricePerUnitUsd": 0.08,  "unitsPerInference": 1,    "inferredHardware": "H100" },
+  { "modelName": "Veo 3.1",               "vendor": "Google",     "category": "video", "pricePerUnitUsd": 0.75,  "unitsPerInference": 1,    "inferredHardware": "TPU v5" }
+]

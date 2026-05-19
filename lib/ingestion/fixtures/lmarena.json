@@ -1,0 +1,11 @@
+[
+  { "modelName": "GPT-5.5",           "vendor": "OpenAI",    "category": "text",  "arenaElo": 1462, "arenaRank": 1 },
+  { "modelName": "Claude Opus 4.7",   "vendor": "Anthropic", "category": "text",  "arenaElo": 1454, "arenaRank": 2 },
+  { "modelName": "Gemini 3.1 Pro",    "vendor": "Google",    "category": "text",  "arenaElo": 1438, "arenaRank": 4 },
+  { "modelName": "Midjourney V8",     "vendor": "Midjourney","category": "image", "arenaElo": 1190, "arenaRank": 1 },
+  { "modelName": "Flux 2 Pro",        "vendor": "Black Forest Labs", "category": "image", "arenaElo": 1175, "arenaRank": 2, "openWeight": false },
+  { "modelName": "Veo 3.1",           "vendor": "Google",    "category": "video", "arenaElo": 1320, "arenaRank": 1 },
+  { "modelName": "Kling 3.0",         "vendor": "Kuaishou",  "category": "video", "arenaElo": 1298, "arenaRank": 2 },
+  { "modelName": "Claude Opus 4.7",   "vendor": "Anthropic", "category": "code",  "arenaElo": 1410, "arenaRank": 1 },
+  { "modelName": "GPT-5.5",           "vendor": "OpenAI",    "category": "code",  "arenaElo": 1402, "arenaRank": 2 }
+]

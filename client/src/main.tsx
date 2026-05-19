@@ -42,6 +42,14 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: "/api/trpc",
       transformer: superjson,
+      headers() {
+        // Admin pages stash the ADMIN_KEY in sessionStorage on first
+        // arrival (see AdminKeyCapture). Inject it on every request so
+        // adminKeyProcedure-gated mutations work without an OAuth login.
+        if (typeof window === "undefined") return {};
+        const key = window.sessionStorage.getItem("aipower:admin-key");
+        return key ? { "x-admin-key": key } : {};
+      },
       fetch(input, init) {
         return globalThis.fetch(input, {
           ...(init ?? {}),

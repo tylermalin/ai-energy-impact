@@ -15,6 +15,20 @@
       "when": 1775859755337,
       "tag": "0001_cool_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1778886252434,
+      "tag": "0002_previous_fenris",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1778951415282,
+      "tag": "0003_flippant_nehzno",
+      "breakpoints": true
     }
   ]
 }
