@@ -22,7 +22,8 @@ let _db: LibSQLDatabase | null = null;
 
 export function getDbClient(): LibSqlClient {
   if (_client) return _client;
-  const url = process.env.DATABASE_URL ?? process.env.TURSO_DATABASE_URL;
+  // Use || (not ??) so empty strings (Vercel sets unset vars as "") fall through.
+  const url = process.env.DATABASE_URL || process.env.TURSO_DATABASE_URL;
   if (!url) {
     throw new Error(
       "DATABASE_URL is not set. Local: `file:./local.db`. Prod: provisioned by Vercel/Turso integration as TURSO_DATABASE_URL.",
@@ -30,7 +31,7 @@ export function getDbClient(): LibSqlClient {
   }
   _client = createClient({
     url,
-    authToken: process.env.DATABASE_AUTH_TOKEN ?? process.env.TURSO_AUTH_TOKEN,
+    authToken: process.env.DATABASE_AUTH_TOKEN || process.env.TURSO_AUTH_TOKEN,
   });
   return _client;
 }
