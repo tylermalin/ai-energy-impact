@@ -190,6 +190,78 @@ export default function Blog() {
             </p>
           </div>
 
+          {/* Inaugural introduction post — pinned, always visible */}
+          <div className="mb-12 rounded-xl border border-teal/20 bg-gradient-to-br from-teal/5 to-transparent p-8">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <span className="text-xs font-mono text-teal uppercase tracking-widest">Inaugural Post</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border text-violet-400 bg-violet-500/15 border-violet-500/20">
+                <FlaskConical className="w-3 h-3" />
+                Introduction
+              </span>
+            </div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-white/90 mb-4">
+              Why we built AI Energy Impact
+            </h2>
+            <div className="space-y-4 text-white/55 leading-relaxed text-[15px]">
+              <p>
+                AI is becoming infrastructure on the same scale as electricity itself, and the
+                industry's environmental footprint is growing faster than its measurement
+                practices. The IEA projects data centers will consume more than{" "}
+                <strong className="text-white/80">1,000 TWh annually by 2030</strong> — more than
+                the total electricity demand of most industrialized nations. Every prompt sent to
+                a frontier model carries an energy, carbon, and water cost. Multiply by billions
+                of prompts a day, and the footprint compounds quickly.
+              </p>
+              <p>
+                Today, the public has no way to answer a basic question:{" "}
+                <em className="text-white/70">how much does it cost the planet when I use this model?</em>{" "}
+                The numbers that exist are scattered across academic papers, blog posts, vendor
+                disclosures, and policy memos. Different studies use incompatible methodologies.
+                Some count only the GPU, some the full server, some the entire data center.
+                Some use market-based renewable energy credits to zero out emissions that physically
+                still happen. The Federation of American Scientists has documented that the gap
+                between reported and actual emissions can be more than 600%.
+              </p>
+              <p>
+                We built this dashboard to do one thing well:{" "}
+                <strong className="text-white/80">give every measurement a source, every
+                calculation an assumption, and every assumption a confidence level</strong>. Some
+                rows are from direct hardware measurement (ML.Energy, Hugging Face Energy Score,
+                Google Cloud disclosed numbers). Some are derived from disclosed throughput and
+                hardware specs. Some are estimated via the Mālama AICo2 framework when no direct
+                measurement exists. The dashboard tells you which is which on every row.
+              </p>
+              <p>
+                The longer-term play is to replace estimates with measurements. The companion
+                Mālama Labs program is developing hardware-signed dMRV sensors that will eventually
+                attest to energy and water consumption directly from inside data centers — turning
+                what is currently a reporting exercise into a verifiable one. Until then, this
+                dashboard does the best work that public data alone allows.
+              </p>
+              <p>
+                If you have better data, a methodology improvement, or a model we should be
+                tracking, the <a href="/#contribute" className="text-teal/80 hover:text-teal underline underline-offset-2 transition-colors">Contribute</a>{" "}
+                form is the front door. We're a small team and we want to be wrong about every number
+                you can point us at a better source for.
+              </p>
+            </div>
+            <div className="mt-6 pt-6 border-t border-white/[0.06] flex flex-wrap items-center gap-3">
+              <a
+                href="/#methodology"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-teal/10 border border-teal/20 text-teal text-sm font-medium hover:bg-teal/20 transition-all"
+              >
+                Read the methodology
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="/about"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/70 text-sm font-medium hover:bg-white/[0.06] transition-all"
+              >
+                About the project
+              </a>
+            </div>
+          </div>
+
           {/* Search + Filters */}
           <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
             <div className="relative flex-1 max-w-md">
@@ -257,12 +329,12 @@ export default function Blog() {
 
           {/* Empty state */}
           {!isLoading && filteredPosts.length === 0 && !error && (
-            <div className="text-center py-20">
+            <div className="text-center py-20 border-t border-white/[0.04]">
               <BookOpen className="w-12 h-12 text-white/10 mx-auto mb-4" />
               <p className="text-white/40 font-mono text-sm">
                 {searchQuery || activeCategory !== "all"
                   ? "No posts match your filters."
-                  : "No posts published yet. Check back soon!"}
+                  : "Methodology updates, source additions, and field notes will land here."}
               </p>
             </div>
           )}
