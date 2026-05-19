@@ -25,13 +25,13 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0B1120]/80 backdrop-blur-xl">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <img
               src="/logo.png"
               alt="AI Power"
-              className="h-20 w-auto -my-2 group-hover:opacity-90 transition-opacity"
+              className="h-32 w-auto -my-4 group-hover:opacity-90 transition-opacity"
             />
           </Link>
 

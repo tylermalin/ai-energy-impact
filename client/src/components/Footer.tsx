@@ -25,7 +25,7 @@ export default function Footer({ siteSettings }: FooterProps) {
           {/* Brand */}
           <div>
             <div className="mb-4">
-              <img src="/logo.png" alt="AI Power" className="h-16 w-auto" />
+              <img src="/logo.png" alt="AI Power" className="h-28 w-auto" />
             </div>
             <p className="text-xs text-white/40 leading-relaxed max-w-xs mb-3">
               Comprehensive analysis of AI model energy consumption, carbon emissions, and water usage. Data compiled from peer-reviewed research and industry reports.
