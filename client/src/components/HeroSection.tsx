@@ -55,7 +55,7 @@ const DEFAULTS = {
   heroTitle: "The Environmental Cost of",
   heroHighlight: "Artificial Intelligence",
   heroDescription:
-    "A comprehensive analysis of energy consumption, carbon emissions, and water usage across 30 AI models — from lightweight text classifiers to frontier reasoning systems.",
+    "A comprehensive analysis of energy consumption, carbon emissions, and water usage across the leading AI models — from lightweight text classifiers to frontier reasoning systems.",
   ctaExploreLabel: "Explore Data",
   ctaMethodologyLabel: "Methodology",
   ctaAgentsLabel: "Agents & Sensors",

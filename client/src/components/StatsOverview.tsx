@@ -261,7 +261,7 @@ export default function StatsOverview() {
               <h3 className="font-display font-semibold text-sm text-white/80 uppercase tracking-wider mb-1">
                 Model Distribution
               </h3>
-              <p className="text-xs text-white/40 mb-4">{headlineStats.total} models across six categories</p>
+              <p className="text-xs text-white/40 mb-4">{headlineStats.total} models across {pieData.length} categor{pieData.length === 1 ? "y" : "ies"}</p>
               <div className="h-[180px] flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
