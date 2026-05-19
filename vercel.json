@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "vite build",
+  "buildCommand": "vite build && esbuild server/vercel-handler.ts --bundle --platform=node --format=esm --packages=external --outfile=api/index.js",
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": null,
@@ -8,7 +8,7 @@
     { "source": "/api/(.*)", "destination": "/api" }
   ],
   "functions": {
-    "api/index.ts": {
+    "api/index.js": {
       "maxDuration": 60,
       "memory": 1024
     }
