@@ -19,6 +19,10 @@
  * Idempotent: safe to re-run.
  */
 
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env.local" });
+loadEnv({ path: ".env" });
+
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHash } from "node:crypto";
@@ -30,9 +34,9 @@ import {
 } from "../drizzle/schema";
 import { getDb } from "../server/_core/db-client";
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL && !process.env.TURSO_DATABASE_URL) {
   // eslint-disable-next-line no-console
-  console.error("DATABASE_URL is required to run the seed-top20 script.");
+  console.error("DATABASE_URL or TURSO_DATABASE_URL is required to run the seed-top20 script.");
   process.exit(1);
 }
 
@@ -256,7 +260,8 @@ async function main() {
           await db
             .insert(modelEnergyRecords)
             .values(row)
-            .onDuplicateKeyUpdate({
+            .onConflictDoUpdate({
+              target: modelEnergyRecords.sourceFingerprint,
               set: { compositeRank: seedRow.rank, inTop20: true, lastVerifiedAt: sql`lastVerifiedAt` },
             });
           created++;
