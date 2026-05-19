@@ -24,9 +24,8 @@ export default function Footer({ siteSettings }: FooterProps) {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-4">
-              <img src="/logo.png" alt="AI Power" className="h-8 w-auto" />
-              <span className="font-display font-bold text-sm text-white">AI Energy Impact</span>
+            <div className="mb-4">
+              <img src="/logo.png" alt="AI Power" className="h-16 w-auto" />
             </div>
             <p className="text-xs text-white/40 leading-relaxed max-w-xs mb-3">
               Comprehensive analysis of AI model energy consumption, carbon emissions, and water usage. Data compiled from peer-reviewed research and industry reports.
